@@ -5,11 +5,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import java.util.ArrayList;
 
 public class Initialization {
-
-//    public static ArrayList rectanglesData = new ArrayList();
 
     public static void getMinLengthFromZero(int[] figure){
 
@@ -22,7 +19,7 @@ public class Initialization {
         int temlate_figure [] = new int [8];
 
 
-                // занесение всех координат прямоугольника во временный массив
+        // занесение всех координат прямоугольника во временный массив
         temlate_figure[0] = figure[0];
         temlate_figure[1] = figure[1];
         temlate_figure[2] = figure[2];
