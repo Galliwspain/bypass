@@ -11,6 +11,8 @@ public class Galgorithm{
 
     public static ArrayList rectanglesData = new ArrayList();
     public static String [][] cardCutting = new String[MAP][MAP];
+    public static ArrayList<String> transaction = new ArrayList<String>();
+
 
 
     public static void initial(){
@@ -28,6 +30,7 @@ public class Galgorithm{
         Initialization.figureInit(Constants.FIGURE_SECOND);
         Initialization.figureInit(Constants.FIGURE_THIRD);
         Initialization.figureInit(Constants.FIGURE_FOURTH);
+        Initialization.figureInit(Constants.FIGURE_FIVES);
 
         // можно проверить корректность записанных данных
 //        for (Object item : rectanglesData){

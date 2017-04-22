@@ -6,6 +6,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
+
 public class Initialization {
 
     public static void figureInit(double[] figure){
@@ -79,9 +81,12 @@ public class Initialization {
         String rectangle = convertToJson(coordinate1,coordinate2,coordinate3,coordinate4,figure_bypass,hyp,minHipotenuse);
         Galgorithm.rectanglesData.add(rectangle);
         // распологаем фигуры на карте раскроя
-        Initialization.writeToCardCutting(rectangle);
 
-
+//        Initialization.writeToCardCuttingTransaction(rectangle);
+        if (Initialization.writeToCardCuttingTransaction(rectangle)){
+            writeToCardCuttingAllowed(rectangle);
+        }
+        Galgorithm.transaction.clear();
     }
 
     public static double getPerimetr(double[] corners){
@@ -137,7 +142,7 @@ public class Initialization {
     }
 
     // функция, записывающая область фигуры на карту раскроя
-    public static boolean writeToCardCutting(String contur) {
+    public static boolean writeToCardCuttingTransaction(String contur) {
 
         int[] instructions = readFromJson(contur);
 
@@ -154,23 +159,51 @@ public class Initialization {
                 String[] content_previous_cell = previous_cell.split("/");
                 switch (cell) {
                     case "0":
-                        Galgorithm.cardCutting[i][j] = String.valueOf(instructions[0]);
+                        Galgorithm.transaction.add(i+":"+j);
+//                        Galgorithm.cardCutting[i][j] = String.valueOf(instructions[0]);
                         break;
 
                     default:
-                        // если в данной ячейке уже одно значение И в предыдущей содержится 2 значения И в предыдущей содержится id текущей фигуры
-                        if(cell.split("/").length == 1 && previous_cell.split("/").length > 1 && (content_previous_cell[0].equals(String.valueOf(instructions[0])) || content_previous_cell[1].equals(String.valueOf(instructions[0])))) {
-                            return false;
+                        // если в данной ячейке уже одно значение И в предыдущую планируется добавление данной транзакции
+                        if(cell.split("/").length == 1 && Galgorithm.transaction.contains(i+":"+(j-1)))
+//                                previous_cell.split("/").length == 2 &&
+//                                (content_previous_cell[0].equals(String.valueOf(instructions[0])) || content_previous_cell[1].equals(String.valueOf(instructions[0]))))
+                        {
+                            // проверяем, не внутренняя ли это фигура
+                            if (Galgorithm.cardCutting[instructions[1]][instructions[2]-1].equals(Galgorithm.cardCutting[instructions[1]][instructions[2]]))
+                            {
+                                Galgorithm.transaction.add(i+":"+j);
+                            }else{
+                                Galgorithm.transaction.clear();
+                                return false;
+                            }
                         }
                         // если в данной ячейке уже больше одного значения
                         else if (cell.split("/").length > 1){
+                            Galgorithm.transaction.clear();
                             return false;
-                        }else {Galgorithm.cardCutting[i][j] = cell.concat("/" + String.valueOf(instructions[0]));}
+                        }else {
+                            Galgorithm.transaction.add(i+":"+j);
+//                            Galgorithm.cardCutting[i][j] = cell.concat("/" + String.valueOf(instructions[0]));
+                        }
 
 
                 }
 
             }
+        }
+        return true;
+    }
+
+    public static boolean writeToCardCuttingAllowed(String contur){
+
+        int[] instructions = readFromJson(contur);
+
+        for (String item : Galgorithm.transaction){
+            String temp = Galgorithm.cardCutting [Integer.parseInt(item.split(":")[0])][Integer.parseInt(item.split(":")[1])];
+            Galgorithm.cardCutting [Integer.parseInt(item.split(":")[0])][Integer.parseInt(item.split(":")[1])]
+                    = temp.equals("0")
+                    ? String.valueOf(instructions[0]) : temp.concat("/" + String.valueOf(instructions[0]));
         }
         return true;
     }
