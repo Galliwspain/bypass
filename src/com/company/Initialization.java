@@ -109,6 +109,7 @@ public class Initialization {
         figure.put("b", b);
         figure.put("c", c);
         figure.put("d", d);
+        figure.put("figure_origin", a);
         figure.put("figure_bypass", bypass_f);
         figure.put("zero_xy1", hypoteunse[0]);
         figure.put("zero_xy2", hypoteunse[1]);
