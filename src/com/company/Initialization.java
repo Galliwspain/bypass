@@ -137,21 +137,41 @@ public class Initialization {
     }
 
     // функция, записывающая область фигуры на карту раскроя
-    public static boolean writeToCardCutting(String contur){
+    public static boolean writeToCardCutting(String contur) {
 
         int[] instructions = readFromJson(contur);
 
-        for (int item : instructions){
+        for (int item : instructions) {
             System.out.print(item);
         }
         System.out.println();
-        for (int i = instructions[1]; i <= instructions[3]; i++){
-            for (int j = instructions[2]; j <= instructions[4]; j++){
+        for (int i = instructions[1]; i <= instructions[3]; i++) {
+            for (int j = instructions[2]; j <= instructions[4]; j++) {
                 // в нужную ячейку записать figure_id
-                Galgorithm.cardCutting [i][j] = instructions[0];
+                // предварительно проверив, что она пустая или подходит для смежности
+                String  cell = Galgorithm.cardCutting[i][j];
+                String previous_cell = j > 0 ? Galgorithm.cardCutting[i][j-1] : "X";
+                String[] content_previous_cell = previous_cell.split("/");
+                switch (cell) {
+                    case "0":
+                        Galgorithm.cardCutting[i][j] = String.valueOf(instructions[0]);
+                        break;
+
+                    default:
+                        // если в данной ячейке уже одно значение И в предыдущей содержится 2 значения И в предыдущей содержится id текущей фигуры
+                        if(cell.split("/").length == 1 && previous_cell.split("/").length > 1 && (content_previous_cell[0].equals(String.valueOf(instructions[0])) || content_previous_cell[1].equals(String.valueOf(instructions[0])))) {
+                            return false;
+                        }
+                        // если в данной ячейке уже больше одного значения
+                        else if (cell.split("/").length > 1){
+                            return false;
+                        }else {Galgorithm.cardCutting[i][j] = cell.concat("/" + String.valueOf(instructions[0]));}
+
+
+                }
+
             }
         }
-
         return true;
     }
 
