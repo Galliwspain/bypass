@@ -8,7 +8,7 @@ import org.json.simple.parser.ParseException;
 
 public class Initialization {
 
-    public static void getMinLengthFromZero(int[] figure){
+    public static void figureInit(double[] figure){
 
 //        System.out.print("request: ");
 //        for (int items : figure){
@@ -16,7 +16,9 @@ public class Initialization {
 //        }
 //        System.out.println("\n");
 
-        int temlate_figure [] = new int [8];
+        /** на данном этапе важно,чтобы figure приходила в формате {x1,y1,x3,y3} - противоположные углы прямоугольника*/
+
+        double temlate_figure [] = new double[8];
 
 
         // занесение всех координат прямоугольника во временный массив
@@ -30,11 +32,14 @@ public class Initialization {
         temlate_figure[7] = figure[3];
 
         // для хранения в json, занесем в массивы координаты
-        int[] coordinate1 = {temlate_figure[0],temlate_figure[1]};
-        int[] coordinate2 = {temlate_figure[2],temlate_figure[3]};
-        int[] coordinate3 = {temlate_figure[4],temlate_figure[5]};
-        int[] coordinate4 = {temlate_figure[6],temlate_figure[7]};
+        double[] coordinate1 = {temlate_figure[0],temlate_figure[1]};
+        double[] coordinate2 = {temlate_figure[2],temlate_figure[3]};
+        double[] coordinate3 = {temlate_figure[4],temlate_figure[5]};
+        double[] coordinate4 = {temlate_figure[6],temlate_figure[7]};
 
+
+        // подсчет периметра фигуры
+        double figure_bypass = getPerimetr(figure);
 
 //        System.out.print("response: ");
 //        for (int item : coordinate1){
@@ -42,7 +47,7 @@ public class Initialization {
 //        }
 //        System.out.println("\n");
 
-        // подсчет расстояния до каждой координаты фигуры от начала координат(теорема Пифогора)
+        // подсчет расстояния до каждой координаты фигуры от начала координат(теорема Пифогора) sqrt(Xn^2 + Yn^2)
         double hypotenuse1 = Math.sqrt(Math.pow(temlate_figure[0],2) + Math.pow(temlate_figure[1],2));
         double hypotenuse2 = Math.sqrt(Math.pow(temlate_figure[2],2) + Math.pow(temlate_figure[3],2));
         double hypotenuse3 = Math.sqrt(Math.pow(temlate_figure[4],2) + Math.pow(temlate_figure[5],2));
@@ -55,7 +60,7 @@ public class Initialization {
 
 
         // выбираем наименьшее расстояние до фигуры
-        //TODO: hyp & all_hipotenuses
+        //TODO: hyp & all_hipotenuses refactor/ make a function sort()
         double[] all_hypotenuses = {hypotenuse1,hypotenuse2,hypotenuse3,hypotenuse4};
         for (int i = 0; i < all_hypotenuses.length; i++){
             if (all_hypotenuses[i] > all_hypotenuses[i++]){
@@ -70,36 +75,49 @@ public class Initialization {
 
 //        System.out.println("minHipotenuse: "+minHipotenuse);
 
-        String rectangle = convertToJson(coordinate1,coordinate2,coordinate3,coordinate4,hyp,minHipotenuse);
+        String rectangle = convertToJson(coordinate1,coordinate2,coordinate3,coordinate4,figure_bypass,hyp,minHipotenuse);
 
         // записываем отдельные объекты по каждому прямоугольку в список
         Galgorithm.rectanglesData.add(rectangle);
 
     }
 
-    public static String convertToJson(int[] coordinate1, int[] coordinate2, int[] coordinate3, int[] coordinate4, double[] hypoteunse, double minHypotenuse) {
+    public static double getPerimetr(double[] corners){
+        if (corners.length == 4){
+            double side1 = corners[2] - corners[0];
+            double side2 = corners[3] - corners[1];
+            double perimetr = 2*(side1+side2);
+            return perimetr;
+        }
+
+        return 0;
+    }
+
+    public static String convertToJson(double[] coordinate1, double[] coordinate2, double[] coordinate3, double[] coordinate4, double bypass_f ,double[] hypoteunse, double minHypotenuse) {
         System.out.println("INFO: start convertToJson");
+
+        String a = String.valueOf(coordinate1[0] +";"+ coordinate1[1]);
+        String b = String.valueOf(coordinate2[0] +";"+ coordinate2[1]);
+        String c = String.valueOf(coordinate3[0] +";"+ coordinate3[1]);
+        String d = String.valueOf(coordinate4[0] +";"+ coordinate4[1]);
 
         JSONObject figureObj = new JSONObject();
         JSONObject figure = new JSONObject();
         JSONArray card = new JSONArray();
 
-        figure.put("x1", coordinate1[0]);
-        figure.put("y1", coordinate1[1]);
-        figure.put("x2", coordinate2[0]);
-        figure.put("y2", coordinate2[1]);
-        figure.put("x3", coordinate3[0]);
-        figure.put("y3", coordinate3[1]);
-        figure.put("x4", coordinate4[0]);
-        figure.put("y4", coordinate4[1]);
+        figure.put("a", a);
+        figure.put("b", b);
+        figure.put("c", c);
+        figure.put("d", d);
+        figure.put("figure_bypass", bypass_f);
         figure.put("zero_xy1", hypoteunse[0]);
         figure.put("zero_xy2", hypoteunse[1]);
         figure.put("zero_xy3", hypoteunse[2]);
         figure.put("zero_xy4", hypoteunse[3]);
         figure.put("min_hypotenuse", minHypotenuse);
 
-        card.add(figure);
-        figureObj.put("figures", card);
+//        card.add(figure);
+//        figureObj.put("figures", card);
 
         String result = figure.toString();
         System.out.println(result);
@@ -124,5 +142,7 @@ public class Initialization {
         Object min_hyp = parse_result.get("min_hypotenuse");
         System.out.println("DF: "+min_hyp);
     }
+
+
 
 }

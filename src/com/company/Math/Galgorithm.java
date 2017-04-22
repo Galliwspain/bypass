@@ -15,10 +15,10 @@ public class Galgorithm{
 
         System.out.println("INFO: initialization");
 
-        Initialization.getMinLengthFromZero(Constants.FIGURE_FIRST);
-        Initialization.getMinLengthFromZero(Constants.FIGURE_SECOND);
-        Initialization.getMinLengthFromZero(Constants.FIGURE_THIRD);
-        Initialization.getMinLengthFromZero(Constants.FIGURE_FOURTH);
+        Initialization.figureInit(Constants.FIGURE_FIRST);
+        Initialization.figureInit(Constants.FIGURE_SECOND);
+        Initialization.figureInit(Constants.FIGURE_THIRD);
+        Initialization.figureInit(Constants.FIGURE_FOURTH);
 
         // можно проверить корректность записанных данных
 //        for (Object item : rectanglesData){
