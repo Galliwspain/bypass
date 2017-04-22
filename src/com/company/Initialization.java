@@ -16,7 +16,7 @@ public class Initialization {
 //        }
 //        System.out.println("\n");
 
-        /** на данном этапе важно,чтобы figure приходила в формате {x1,y1,x3,y3} - противоположные углы прямоугольника*/
+        /** на данном этапе важно,чтобы figure приходила в формате {x1,y1,x3,y3} = {a_x, a_y, c_x, c_y} - противоположные углы прямоугольника*/
 
         double temlate_figure [] = new double[8];
 
@@ -24,18 +24,18 @@ public class Initialization {
         // занесение всех координат прямоугольника во временный массив
         temlate_figure[0] = figure[0];
         temlate_figure[1] = figure[1];
-        temlate_figure[2] = figure[2];
-        temlate_figure[3] = figure[1];
-        temlate_figure[4] = figure[0];
+        temlate_figure[2] = figure[0];
+        temlate_figure[3] = figure[3];
+        temlate_figure[4] = figure[2];
         temlate_figure[5] = figure[3];
         temlate_figure[6] = figure[2];
-        temlate_figure[7] = figure[3];
+        temlate_figure[7] = figure[1];
 
         // для хранения в json, занесем в массивы координаты
-        double[] coordinate1 = {temlate_figure[0],temlate_figure[1]};
-        double[] coordinate2 = {temlate_figure[2],temlate_figure[3]};
-        double[] coordinate3 = {temlate_figure[4],temlate_figure[5]};
-        double[] coordinate4 = {temlate_figure[6],temlate_figure[7]};
+        double[] coordinate1 = {temlate_figure[0],temlate_figure[1]}; // л н угол
+        double[] coordinate2 = {temlate_figure[2],temlate_figure[3]}; // л в угол
+        double[] coordinate3 = {temlate_figure[4],temlate_figure[5]}; // п в угол
+        double[] coordinate4 = {temlate_figure[6],temlate_figure[7]}; // п н угол
 
 
         // подсчет периметра фигуры
@@ -75,10 +75,12 @@ public class Initialization {
 
 //        System.out.println("minHipotenuse: "+minHipotenuse);
 
-        String rectangle = convertToJson(coordinate1,coordinate2,coordinate3,coordinate4,figure_bypass,hyp,minHipotenuse);
-
         // записываем отдельные объекты по каждому прямоугольку в список
+        String rectangle = convertToJson(coordinate1,coordinate2,coordinate3,coordinate4,figure_bypass,hyp,minHipotenuse);
         Galgorithm.rectanglesData.add(rectangle);
+        // распологаем фигуры на карте раскроя
+        Initialization.writeToCardCutting(rectangle);
+
 
     }
 
@@ -103,6 +105,7 @@ public class Initialization {
 
         JSONObject figureObj = new JSONObject();
         JSONObject figure = new JSONObject();
+        JSONObject id_figure = new JSONObject();
         JSONArray card = new JSONArray();
 
         figure.put("a", a);
@@ -117,17 +120,42 @@ public class Initialization {
         figure.put("zero_xy4", hypoteunse[3]);
         figure.put("min_hypotenuse", minHypotenuse);
 
-//        card.add(figure);
-//        figureObj.put("figures", card);
+        // выдаем порядковый номер контуру
+        int figure_id = Galgorithm.rectanglesData.size() + 1;
 
-        String result = figure.toString();
+        id_figure.put("id", figure_id);
+
+        card.add(figure);
+        card.add(id_figure);
+        figureObj.put("figure_data", card);
+
+        String result = figureObj.toString();
         System.out.println(result);
 
         return result;
 
     }
 
-    public static void readFromJson(String rectanglesData){
+    // функция, записывающая область фигуры на карту раскроя
+    public static boolean writeToCardCutting(String contur){
+
+        int[] instructions = readFromJson(contur);
+
+        for (int item : instructions){
+            System.out.print(item);
+        }
+        System.out.println();
+        for (int i = instructions[1]; i <= instructions[3]; i++){
+            for (int j = instructions[2]; j <= instructions[4]; j++){
+                // в нужную ячейку записать figure_id
+                Galgorithm.cardCutting [i][j] = instructions[0];
+            }
+        }
+
+        return true;
+    }
+
+    public static int[] readFromJson(String rectanglesData){
 
         JSONParser parser = new JSONParser();
         Object obj = null;
@@ -138,10 +166,32 @@ public class Initialization {
             e.printStackTrace();
         }
 
+        // получаем список [] figure_data
         JSONObject parse_result = (JSONObject) obj;
+        JSONArray parse_array = (JSONArray) parse_result.get("figure_data");
 
-        Object min_hyp = parse_result.get("min_hypotenuse");
-        System.out.println("DF: "+min_hyp);
+        // получаем counter_id
+        Long parse_id = ((Long)((JSONObject) parse_array.get(1)).get("id"));
+        int figure_id = Integer.parseInt(parse_id.toString());
+
+        // получаем точки a & c для дальнейшго определения области фигуры
+        // a
+        // так как в json храним точки в double, то сначала парсим в double, затем берем целую часть(Временно для целочисленных значений)
+        String a_params = ((JSONObject)parse_array.get(0)).get("a").toString();
+        String[] a = a_params.split("\"")[0].split(";");
+        int a_x = (int) Double.parseDouble(a[0]);
+        int a_y = (int) Double.parseDouble(a[1]);
+
+        //c
+        String c_params = ((JSONObject)parse_array.get(0)).get("c").toString();
+        String[] c = c_params.split("\"")[0].split(";");
+        int c_x = (int) Double.parseDouble(c[0]);
+        int c_y = (int) Double.parseDouble(c[1]);
+
+        int[] instructions = {figure_id,a_x,a_y,c_x,c_y};
+
+        return instructions;
+
     }
 
 
