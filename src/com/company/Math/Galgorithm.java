@@ -70,10 +70,23 @@ public class Galgorithm{
 
     public static void process(){
         /** старт выполнения*/
+        System.out.println("INFO: start process");
+        // TODO: размер популяции - rp нужно получить из frontend
+        int target_rp = 20;
+        int target_kp = Constants.minKP;
+
         // попытки
-        for (int kp = 0; kp < Constants.minKP; kp++){
+        for (int kp = 0; kp < target_kp; kp++){
             // шаг 5. Формирование начальной популяции kp-ой попытки
-            MasterAlgoritm.getInitialPopulation(kp, Constants.minKP, Constants.maxKP, Constants.minRP, Constants.maxRP);
+            MasterAlgoritm.getInitialPopulation(kp, target_rp);
+        }
+
+        /** проверка заполненности начальной популяции */
+        for (int i = 0; i < target_kp; i++){
+            for (int j = 0; j < target_rp; j++){
+                System.out.print(MasterAlgoritm.population[i][j]);
+            }
+            System.out.println();
         }
     }
 }

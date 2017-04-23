@@ -1,6 +1,5 @@
 package com.company;
 
-import com.company.Math.Constants;
 import com.company.Math.Galgorithm;
 
 import java.util.ArrayList;
@@ -13,30 +12,20 @@ public class MasterAlgoritm {
     public static String [][] population = new String[10][100];
 
 
-    public static void getInitialPopulation(int current_kp,int minKP, int maxKP, int minRP, int maxRp){
-
-        // TODO: getInitialPopulation нужно присылать конкретные KP & RP
+    public static void getInitialPopulation(int current_kp,int current_rp){
 
         for (int i = 0; i <= current_kp; i++){
-            for (int j = 0; j < minRP; j++){
+            for (int j = 0; j < current_rp; j++){
                 population[i][j] = "0";
             }
         }
 
         for (int i = 0; i <= current_kp; i++) {
-            for (int j = 0; j < 1; j++) {
+            for (int j = 0; j < current_rp; j++) {
                 template_route.add(0);
                 population[i][j] = getRandomChromosome(i);
             }
         }
-        /** проверка заполненности начальной популяции */
-        for (int i = 0; i <= current_kp; i++){
-            for (int j = 0; j < minRP; j++){
-                System.out.print(population[i][j]);
-            }
-            System.out.println();
-        }
-
     }
 
     public static String getRandomChromosome(int chromosome_id){
