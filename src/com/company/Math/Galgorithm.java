@@ -9,9 +9,13 @@ import static com.company.Math.Constants.MAP;
 
 public class Galgorithm{
 
+    // hardcode, later must be equals really counter count from frontend
+    public static int contourCount = 7;
+
     public static ArrayList rectanglesData = new ArrayList();
     public static String [][] cardCutting = new String[MAP][MAP];
     public static ArrayList<String> transaction = new ArrayList<String>();
+    public static boolean [][] structureMatrix = new boolean[contourCount+1][contourCount+1];
 
 
 
@@ -26,12 +30,15 @@ public class Galgorithm{
                 cardCutting[i][j] = "0";
             }
         }
+
         Initialization.figureInit(Constants.FIGURE_FIRST);
         Initialization.figureInit(Constants.FIGURE_SECOND);
-        Initialization.figureInit(Constants.FIGURE_FIVES);
-
         Initialization.figureInit(Constants.FIGURE_THIRD);
         Initialization.figureInit(Constants.FIGURE_FOURTH);
+        Initialization.figureInit(Constants.FIGURE_FIVES);
+        Initialization.figureInit(Constants.FIGURE_SIXTH);
+        Initialization.figureInit(Constants.FIGURE_SEVENTH);
+
 
         // можно проверить корректность записанных данных
 //        for (Object item : rectanglesData){
@@ -49,6 +56,13 @@ public class Galgorithm{
             System.out.println();
         }
 
+        for (int i = 0; i <= contourCount; i++) {
+            // Цикл по второй размерности выводит колонки - вывод одной строки
+            for (int j = 0; j <= contourCount; j++) {
+                System.out.print(structureMatrix[i][j]);
+            }
+            System.out.println();
+        }
 
     }
 }

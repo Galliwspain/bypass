@@ -9,6 +9,9 @@ import org.json.simple.parser.ParseException;
 import java.util.ArrayList;
 
 public class Initialization {
+    // факт вложенности контура
+    public static String input = "none";
+
 
     public static void figureInit(double[] figure){
 
@@ -85,6 +88,13 @@ public class Initialization {
 //        Initialization.writeToCardCuttingTransaction(rectangle);
         if (Initialization.writeToCardCuttingTransaction(rectangle)){
             writeToCardCuttingAllowed(rectangle);
+            switch (input){
+                case "none": break;
+                default:
+                    // получаем запись о вложенности, занеосим в матрицу, очищаем запись
+                    Galgorithm.structureMatrix[Integer.parseInt(input.split(":")[0])][Integer.parseInt(input.split(":")[1])] = true;
+                    input="none";
+            }
         }
         Galgorithm.transaction.clear();
     }
@@ -141,7 +151,7 @@ public class Initialization {
 
     }
 
-    // функция, записывающая область фигуры на карту раскроя
+    // функция, записывающая транзакции для нанесения области фигуры на карту раскроя
     public static boolean writeToCardCuttingTransaction(String contur) {
 
         int[] instructions = readFromJson(contur);
@@ -177,9 +187,12 @@ public class Initialization {
                                     if (Galgorithm.cardCutting[instructions[1]][instructions[2]-1].equals(Galgorithm.cardCutting[instructions[1]][instructions[2]]))
                                     {
                                         Galgorithm.transaction.add(i+":"+j);
+                                        // текущей фигуры id : id фигуры стоящий на j-1 от "а" текущей фигуры(имеем право, так как доказали,что это вложенность)
+                                        input=instructions[0]+":"+Galgorithm.cardCutting[instructions[1]][instructions[2]-1];
                                         break;
                                     }else{
                                         Galgorithm.transaction.clear();
+                                        input="none";
                                         return false;
                                     }
                                     // если 2 значения в ячейке
@@ -190,9 +203,12 @@ public class Initialization {
                                             Galgorithm.cardCutting[instructions[1]][instructions[2]].equals(second_value))
                                     {
                                         Galgorithm.transaction.add(i+":"+j);
+                                        // текущей фигуры id : id стоящий в текущей позиции(доказали, что именно в эту фигуру вложенность)
+                                        input=instructions[0]+":"+Galgorithm.cardCutting[instructions[1]][instructions[2]];
                                         break;
                                     }else{
                                         Galgorithm.transaction.clear();
+                                        input="none";
                                         return false;
                                     }
                             }
@@ -201,6 +217,7 @@ public class Initialization {
                         // если в данной ячейке уже больше одного значения
                         else if (cell.split("/").length > 1){
                             Galgorithm.transaction.clear();
+                            input="none";
                             return false;
                         }else {
                             Galgorithm.transaction.add(i+":"+j);
@@ -215,6 +232,7 @@ public class Initialization {
         return true;
     }
 
+    // функция, записывающая область фигуры на карту раскроя
     public static boolean writeToCardCuttingAllowed(String contur){
 
         int[] instructions = readFromJson(contur);
@@ -228,6 +246,7 @@ public class Initialization {
         return true;
     }
 
+    // функция, читающая из "БД" основные данные по контуру
     public static int[] readFromJson(String rectanglesData){
 
         JSONParser parser = new JSONParser();
