@@ -16,6 +16,7 @@ public class Galgorithm{
     public static String [][] cardCutting = new String[Constants.MAP][Constants.MAP];
     public static ArrayList<String> transaction = new ArrayList<String>();
     public static boolean [][] structureMatrix = new boolean[contourCount+1][contourCount+1];
+    public static String new_population [] = new String[150];
 
 
 
@@ -73,20 +74,37 @@ public class Galgorithm{
         System.out.println("INFO: start process");
         // TODO: размер популяции - rp нужно получить из frontend
         int target_rp = 20;
-        int target_kp = Constants.minKP;
+//        int target_kp = Constants.minKP;
+        int target_kp = 1;
+        int target_tg = Constants.minTG;
+        double target_so = Constants.minSO;
+        double target_ps = Constants.minPS;
 
-        // попытки
+        // попытки шаг 4
         for (int kp = 0; kp < target_kp; kp++){
             // шаг 5. Формирование начальной популяции kp-ой попытки
-            MasterAlgoritm.getInitialPopulation(kp, target_rp);
+            new_population = MasterAlgoritm.getInitialPopulation(target_rp);
+            MasterAlgoritm.bindPopulationsFromDifferentKP(new_population, kp ,target_rp);
+            // генерации шаг 7
+            for (int tg = 1; tg <= target_tg; tg++){
+                //выделение элиты
+                new_population = MasterAlgoritm.sortElite(target_so, target_rp, new_population);
+
+                //Кроссинговер
+                new_population = MasterAlgoritm.doCrossover(target_rp, target_ps, new_population);
+            }
         }
 
-        /** проверка заполненности начальной популяции */
+        /** проверка заполненности общей бызы популяций */
         for (int i = 0; i < target_kp; i++){
             for (int j = 0; j < target_rp; j++){
-                System.out.print(MasterAlgoritm.population[i][j]);
+                System.out.print(MasterAlgoritm.common_population[i][j]);
             }
             System.out.println();
+        }
+
+        for (int i = 0; i < target_rp; i++){
+            System.out.print(new_population[i]);
         }
     }
 }

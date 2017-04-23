@@ -284,6 +284,100 @@ public class Initialization {
 
     }
 
+    // функция, читающая из "БД" ALL INT данные по контуру
+    public static int[] readIntFromJson(String rectanglesData){
 
+        JSONParser parser = new JSONParser();
+        Object obj = null;
+
+        try {
+            obj = parser.parse(rectanglesData);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // получаем список [] figure_data
+        JSONObject parse_result = (JSONObject) obj;
+        JSONArray parse_array = (JSONArray) parse_result.get("figure_data");
+
+        // получаем counter_id
+        Long parse_id = ((Long)((JSONObject) parse_array.get(1)).get("id"));
+        int figure_id = Integer.parseInt(parse_id.toString());
+
+        // получаем точки a & c для дальнейшго определения области фигуры
+        // a
+        // так как в json храним точки в double, то сначала парсим в double, затем берем целую часть(Временно для целочисленных значений)
+        String a_params = ((JSONObject)parse_array.get(0)).get("a").toString();
+        String[] a = a_params.split("\"")[0].split(";");
+        int a_x = (int) Double.parseDouble(a[0]);
+        int a_y = (int) Double.parseDouble(a[1]);
+
+        String b_params = ((JSONObject)parse_array.get(0)).get("b").toString();
+        String[] b = b_params.split("\"")[0].split(";");
+        int b_x = (int) Double.parseDouble(b[0]);
+        int b_y = (int) Double.parseDouble(b[1]);
+
+        //c
+        String c_params = ((JSONObject)parse_array.get(0)).get("c").toString();
+        String[] c = c_params.split("\"")[0].split(";");
+        int c_x = (int) Double.parseDouble(c[0]);
+        int c_y = (int) Double.parseDouble(c[1]);
+
+        String d_params = ((JSONObject)parse_array.get(0)).get("d").toString();
+        String[] d = d_params.split("\"")[0].split(";");
+        int d_x = (int) Double.parseDouble(d[0]);
+        int d_y = (int) Double.parseDouble(d[1]);
+
+        String figure_origin = ((JSONObject)parse_array.get(0)).get("figure_origin").toString();
+        String[] figure = figure_origin.split("\"")[0].split(";");
+        int origin_x = (int) Double.parseDouble(figure[0]);
+        int origin_y = (int) Double.parseDouble(figure[1]);
+
+        int[] instructions = {figure_id,a_x,a_y, b_x, b_y, c_x,c_y, d_x, d_y, origin_x, origin_y};
+
+        return instructions;
+
+    }
+
+    // функция, читающая из "БД" ALL данные по контуру
+    public static double[] readDoubleFromJson(String rectanglesData){
+
+        JSONParser parser = new JSONParser();
+        Object obj = null;
+
+        try {
+            obj = parser.parse(rectanglesData);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // получаем список [] figure_data
+        JSONObject parse_result = (JSONObject) obj;
+        JSONArray parse_array = (JSONArray) parse_result.get("figure_data");
+
+
+        String zero_a = ((JSONObject)parse_array.get(0)).get("zero_xy1").toString();
+        double z_a = Double.parseDouble(zero_a);
+
+        String zero_b = ((JSONObject)parse_array.get(0)).get("zero_xy2").toString();
+        double z_b = Double.parseDouble(zero_b);
+
+        String zero_c = ((JSONObject)parse_array.get(0)).get("zero_xy3").toString();
+        double z_c = Double.parseDouble(zero_c);
+
+        String zero_d = ((JSONObject)parse_array.get(0)).get("zero_xy4").toString();
+        double z_d = Double.parseDouble(zero_d);
+
+        String bypass = ((JSONObject)parse_array.get(0)).get("figure_bypass").toString();
+        double bp = Double.parseDouble(bypass);
+
+        String hypotenuse = ((JSONObject)parse_array.get(0)).get("min_hypotenuse").toString();
+        double hyp = Double.parseDouble(hypotenuse);
+
+        double[] instructions = {z_a,z_b,z_c,z_d,bp,hyp};
+
+        return instructions;
+
+    }
 
 }
