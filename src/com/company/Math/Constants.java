@@ -14,6 +14,30 @@ package com.company.Math;
 
      static final int MAP = 10;
 
+     // размер популяции
+     static final int minRP = 20;
+     static final int maxRP = 100;
+
+     // число генераций
+     static final int minTG = 20;
+     static final int maxTG = 100;
+
+     // вероятность скрещивания
+     static final double minPS = 0.7;
+     static final double maxPS = 0.9;
+
+     // вероятность мутации
+     static final double minPM = 0.05;
+     static final double maxPM = 0.1;
+
+     // степень обновления популяции
+     static final double minSO = 0.95;
+     static final double maxSO = 1;
+
+     // количество попыток
+     static final int minKP = 3;
+     static final int maxKP = 5;
+
 
  }
 

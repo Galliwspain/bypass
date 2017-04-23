@@ -82,10 +82,7 @@ public class Initialization {
 
         // записываем отдельные объекты по каждому прямоугольку в список
         String rectangle = convertToJson(coordinate1,coordinate2,coordinate3,coordinate4,figure_bypass,hyp,minHipotenuse);
-        Galgorithm.rectanglesData.add(rectangle);
         // распологаем фигуры на карте раскроя
-
-//        Initialization.writeToCardCuttingTransaction(rectangle);
         if (Initialization.writeToCardCuttingTransaction(rectangle)){
             writeToCardCuttingAllowed(rectangle);
             switch (input){
@@ -95,6 +92,7 @@ public class Initialization {
                     Galgorithm.structureMatrix[Integer.parseInt(input.split(":")[0])][Integer.parseInt(input.split(":")[1])] = true;
                     input="none";
             }
+            Galgorithm.rectanglesData.add(rectangle);
         }
         Galgorithm.transaction.clear();
     }

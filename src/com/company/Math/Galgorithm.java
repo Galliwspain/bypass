@@ -1,11 +1,11 @@
 package com.company.Math;
 
+import java.util.ArrayList;
+
+import com.company.MasterAlgoritm;
 import com.company.Math.Constants;
 import com.company.Initialization;
 
-import java.util.ArrayList;
-
-import static com.company.Math.Constants.MAP;
 
 public class Galgorithm{
 
@@ -13,7 +13,7 @@ public class Galgorithm{
     public static int contourCount = 7;
 
     public static ArrayList rectanglesData = new ArrayList();
-    public static String [][] cardCutting = new String[MAP][MAP];
+    public static String [][] cardCutting = new String[Constants.MAP][Constants.MAP];
     public static ArrayList<String> transaction = new ArrayList<String>();
     public static boolean [][] structureMatrix = new boolean[contourCount+1][contourCount+1];
 
@@ -25,8 +25,8 @@ public class Galgorithm{
         System.out.println("INFO: initialization");
 
         // заполняем 0, для принятия решений по размещению в дальнейшем(Initialization.writeToCardCutting())
-        for (int i = 0; i < MAP; i++) {
-            for (int j = 0; j < MAP; j++) {
+        for (int i = 0; i < Constants.MAP; i++) {
+            for (int j = 0; j < Constants.MAP; j++) {
                 cardCutting[i][j] = "0";
             }
         }
@@ -40,29 +40,40 @@ public class Galgorithm{
         Initialization.figureInit(Constants.FIGURE_SEVENTH);
 
 
-        // можно проверить корректность записанных данных
+        /** CONSOLE проверка корректности записанных данных фигур */
 //        for (Object item : rectanglesData){
 //        for(int i=0;i<rectanglesData.size();i++){
 //            System.out.println("rectanglesData: "+rectanglesData.get(i));
 //        }
 
-        for (int i = 0; i < MAP; i++) {
-            // Цикл по второй размерности выводит колонки - вывод одной строки
-            for (int j = 0; j < MAP; j++) {
-                // Используем оператор print - без перехода на следующую строку
-                System.out.print(cardCutting[i][j]);
-            }
-            // Переход на следующую строку
-            System.out.println();
-        }
+        /** CONSOLE проверка корректности заполнения карты раскроя */
+//        for (int i = 0; i < Constants.MAP; i++) {
+//            // Цикл по второй размерности выводит колонки - вывод одной строки
+//            for (int j = 0; j < Constants.MAP; j++) {
+//                // Используем оператор print - без перехода на следующую строку
+//                System.out.print(cardCutting[i][j]);
+//            }
+//            // Переход на следующую строку
+//            System.out.println();
+//        }
 
-        for (int i = 0; i <= contourCount; i++) {
-            // Цикл по второй размерности выводит колонки - вывод одной строки
-            for (int j = 0; j <= contourCount; j++) {
-                System.out.print(structureMatrix[i][j]);
-            }
-            System.out.println();
-        }
+        /** CONSOLE проверка корректности заполнения структурной матрицы */
+//        for (int i = 0; i <= contourCount; i++) {
+//            // Цикл по второй размерности выводит колонки - вывод одной строки
+//            for (int j = 0; j <= contourCount; j++) {
+//                System.out.print(structureMatrix[i][j]);
+//            }
+//            System.out.println();
+//        }
 
+    }
+
+    public static void process(){
+        /** старт выполнения*/
+        // попытки
+        for (int kp = 0; kp < Constants.minKP; kp++){
+            // шаг 5. Формирование начальной популяции kp-ой попытки
+            MasterAlgoritm.getInitialPopulation(kp, Constants.minKP, Constants.maxKP, Constants.minRP, Constants.maxRP);
+        }
     }
 }
