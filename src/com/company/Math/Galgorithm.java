@@ -28,9 +28,10 @@ public class Galgorithm{
         }
         Initialization.figureInit(Constants.FIGURE_FIRST);
         Initialization.figureInit(Constants.FIGURE_SECOND);
+        Initialization.figureInit(Constants.FIGURE_FIVES);
+
         Initialization.figureInit(Constants.FIGURE_THIRD);
         Initialization.figureInit(Constants.FIGURE_FOURTH);
-        Initialization.figureInit(Constants.FIGURE_FIVES);
 
         // можно проверить корректность записанных данных
 //        for (Object item : rectanglesData){

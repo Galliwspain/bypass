@@ -170,13 +170,33 @@ public class Initialization {
 //                                (content_previous_cell[0].equals(String.valueOf(instructions[0])) || content_previous_cell[1].equals(String.valueOf(instructions[0]))))
                         {
                             // проверяем, не внутренняя ли это фигура
-                            if (Galgorithm.cardCutting[instructions[1]][instructions[2]-1].equals(Galgorithm.cardCutting[instructions[1]][instructions[2]]))
-                            {
-                                Galgorithm.transaction.add(i+":"+j);
-                            }else{
-                                Galgorithm.transaction.clear();
-                                return false;
+                            // нужно прочитать значение ячейки, которая была перед origin(по j) данной фигуры, НО там может быть как одно значение, так и два
+                            int item_counts = Galgorithm.cardCutting[instructions[1]][instructions[2]-1].split("/").length;
+                            switch (item_counts){
+                                case 1:
+                                    if (Galgorithm.cardCutting[instructions[1]][instructions[2]-1].equals(Galgorithm.cardCutting[instructions[1]][instructions[2]]))
+                                    {
+                                        Galgorithm.transaction.add(i+":"+j);
+                                        break;
+                                    }else{
+                                        Galgorithm.transaction.clear();
+                                        return false;
+                                    }
+                                    // если 2 значения в ячейке
+                                default:
+                                    String first_value = (Galgorithm.cardCutting[instructions[1]][instructions[2]-1]).split("/")[0];
+                                    String second_value = (Galgorithm.cardCutting[instructions[1]][instructions[2]-1]).split("/")[1];
+                                    if (Galgorithm.cardCutting[instructions[1]][instructions[2]].equals(first_value) ||
+                                            Galgorithm.cardCutting[instructions[1]][instructions[2]].equals(second_value))
+                                    {
+                                        Galgorithm.transaction.add(i+":"+j);
+                                        break;
+                                    }else{
+                                        Galgorithm.transaction.clear();
+                                        return false;
+                                    }
                             }
+
                         }
                         // если в данной ячейке уже больше одного значения
                         else if (cell.split("/").length > 1){
