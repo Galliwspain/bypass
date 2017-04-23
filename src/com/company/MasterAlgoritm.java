@@ -81,14 +81,14 @@ public class MasterAlgoritm {
         return new_population;
     }
 
-    public static String[] doCrossover(int rp, double ps, String[] population){
+    public static String doCrossover(int rp, double ps, String[] population){
         // выбираем хромосому с лучшим значением
         for (int i = 0; i < population.length; i++){
             fitnessFunction(String.valueOf(population[i]));
         }
         copy_fitness_f.addAll(fitness_f);
         double best_ff = fitnessSortBest(fitness_f);
-        System.out.println("best_fitness: "+best_ff);
+//        System.out.println("best_fitness: "+best_ff);
         int key = -1;
         for (int k=0;k<fitness_f.size();k++){
             if (best_ff == fitness_f.get(k)){
@@ -96,15 +96,16 @@ public class MasterAlgoritm {
                 break;
             }
         }
-        System.out.println(population[key]);
+//        System.out.println(population[key]);
 
+        String beastr = "best_fitness : "+best_ff+"  best_route: "+population[key];
 
         // порядковый номер i-ой итерации для поиска второго родителя по rp
 
         // 0<=rnd<1
 
         // если rnd<ps, то выбираем i-ую хромосому
-        return population;
+        return beastr;
 
     }
 

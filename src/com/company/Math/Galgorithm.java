@@ -79,6 +79,7 @@ public class Galgorithm{
         int target_tg = Constants.minTG;
         double target_so = Constants.minSO;
         double target_ps = Constants.minPS;
+        String data = "";
 
         // попытки шаг 4
         for (int kp = 0; kp < target_kp; kp++){
@@ -91,20 +92,21 @@ public class Galgorithm{
                 new_population = MasterAlgoritm.sortElite(target_so, target_rp, new_population);
 
                 //Кроссинговер
-                new_population = MasterAlgoritm.doCrossover(target_rp, target_ps, new_population);
+                data = MasterAlgoritm.doCrossover(target_rp, target_ps, new_population);
             }
+            System.out.println(data);
         }
 
         /** проверка заполненности общей бызы популяций */
-        for (int i = 0; i < target_kp; i++){
-            for (int j = 0; j < target_rp; j++){
-                System.out.print(MasterAlgoritm.common_population[i][j]);
-            }
-            System.out.println();
-        }
-
-        for (int i = 0; i < target_rp; i++){
-            System.out.print(new_population[i]);
-        }
+//        for (int i = 0; i < target_kp; i++){
+//            for (int j = 0; j < target_rp; j++){
+//                System.out.print(MasterAlgoritm.common_population[i][j]);
+//            }
+//            System.out.println();
+//        }
+//
+//        for (int i = 0; i < target_rp; i++){
+//            System.out.print(new_population[i]);
+//        }
     }
 }
