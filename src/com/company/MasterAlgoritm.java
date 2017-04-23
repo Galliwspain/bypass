@@ -13,6 +13,8 @@ public class MasterAlgoritm {
     public static String [][] common_population = new String[10][150];
     public static ArrayList<Double> length_route = new ArrayList<>();
     public static ArrayList<Double> fitness_f = new ArrayList<Double>();
+    public static ArrayList<Double> copy_fitness_f = new ArrayList<Double>();
+
 
 
 
@@ -81,11 +83,20 @@ public class MasterAlgoritm {
 
     public static String[] doCrossover(int rp, double ps, String[] population){
         // выбираем хромосому с лучшим значением
-        for (String item : population){
-            fitnessFunction(item);
+        for (int i = 0; i < population.length; i++){
+            fitnessFunction(String.valueOf(population[i]));
         }
+        copy_fitness_f.addAll(fitness_f);
         double best_ff = fitnessSortBest(fitness_f);
         System.out.println("best_fitness: "+best_ff);
+        int key = -1;
+        for (int k=0;k<fitness_f.size();k++){
+            if (best_ff == fitness_f.get(k)){
+                key=k;
+                break;
+            }
+        }
+        System.out.println(population[key]);
 
 
         // порядковый номер i-ой итерации для поиска второго родителя по rp
