@@ -46,10 +46,12 @@ public class MasterAlgoritm {
         }
 
         // преобразование в строку
-        for (int figure = 1; figure < template_route.size(); figure++){
+        for (int figure = 0; figure < template_route.size(); figure++){
             // [0] - пустота
-           chromosome = chromosome.concat(":"+String.valueOf(template_route.get(figure)));
+           chromosome = chromosome.concat(String.valueOf(template_route.get(figure))+":");
         }
+        // для красоты добавляем 0 в конце - возврат в начало координат
+        chromosome = chromosome.concat("0");
         template_route.clear();
         return chromosome;
 
@@ -77,6 +79,7 @@ public class MasterAlgoritm {
     public static String[] sortElite(double so, int rp, String[] new_population){
         // количество элитных
         double ki = (1 - so) * rp;
+
 
         return new_population;
     }
@@ -126,7 +129,7 @@ public class MasterAlgoritm {
         double length_betwen_contours = 0;
         double length_contours = 0;
 
-        for (int i = 1; i < String.valueOf(route).split(":").length; i++){
+        for (int i = 1; i < temp_route.length -1; i++){
 
             // получение айди фигуры из базы фигур для сравнения с текущей популяцией(фигурой)
             for (int j = 0; j < Galgorithm.rectanglesData.size(); j++) {
@@ -141,13 +144,14 @@ public class MasterAlgoritm {
                         id_next = int_rectangle_next[0];
                         // иначе просит несуществующее java.lang.ArrayIndexOutOfBoundsException: 7
                         if (i < temp_route.length-1){
-                        if(id_next == Integer.parseInt(temp_route[i+1])){
-                            double_rectangle_next = Initialization.readDoubleFromJson(Galgorithm.rectanglesData.get(k).toString());
-                            break;
+                            if(id_next == Integer.parseInt(temp_route[i+1])){
+                                double_rectangle_next = Initialization.readDoubleFromJson(Galgorithm.rectanglesData.get(k).toString());
+                                break;
+                            }
                         }
                     }
-                    }
                     getLengthBetwenContours(temp_route,int_rectangle,double_rectangle,int_rectangle_next,double_rectangle_next);
+                    //TODO:нужен переход к следующему i иначе повторное отправление фигуры
                     //TODO: почистить length
                 }
             }
@@ -168,8 +172,8 @@ public class MasterAlgoritm {
 
         //добавим периметр фигуры bp
         length_route.add(double_rectangle[4]);
-        // если ели эта фигура первая(в route лишнее : вначале)
-        if (length_route.isEmpty()){
+        // если ели эта фигура первая(есть только 1-ый периметр double_rectangle[4])
+        if (length_route.size() == 1){
             // берем расстояние от 0,0 до точки врезки - default = z->a
             length_route.add(double_rectangle[0]);
         }if(length_route.size() < route.length - 1){

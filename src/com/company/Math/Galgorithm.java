@@ -9,14 +9,14 @@ import com.company.Initialization;
 
 public class Galgorithm{
 
-    // hardcode, later must be equals really counter count from frontend
+    // hardcode, later must be equals really countour count from frontend
     public static int contourCount = 7;
 
     public static ArrayList rectanglesData = new ArrayList();
     public static String [][] cardCutting = new String[Constants.MAP][Constants.MAP];
     public static ArrayList<String> transaction = new ArrayList<String>();
     public static boolean [][] structureMatrix = new boolean[contourCount+1][contourCount+1];
-    public static String new_population [] = new String[150];
+    public static String current_population [] = new String[150];
 
 
 
@@ -35,10 +35,10 @@ public class Galgorithm{
         Initialization.figureInit(Constants.FIGURE_FIRST);
         Initialization.figureInit(Constants.FIGURE_SECOND);
         Initialization.figureInit(Constants.FIGURE_THIRD);
-        Initialization.figureInit(Constants.FIGURE_FOURTH);
+//        Initialization.figureInit(Constants.FIGURE_FOURTH);
         Initialization.figureInit(Constants.FIGURE_FIVES);
         Initialization.figureInit(Constants.FIGURE_SIXTH);
-        Initialization.figureInit(Constants.FIGURE_SEVENTH);
+//        Initialization.figureInit(Constants.FIGURE_SEVENTH);
 
 
         /** CONSOLE проверка корректности записанных данных фигур */
@@ -84,15 +84,15 @@ public class Galgorithm{
         // попытки шаг 4
         for (int kp = 0; kp < target_kp; kp++){
             // шаг 5. Формирование начальной популяции kp-ой попытки
-            new_population = MasterAlgoritm.getInitialPopulation(target_rp);
-            MasterAlgoritm.bindPopulationsFromDifferentKP(new_population, kp ,target_rp);
-            // генерации шаг 7
+            current_population = MasterAlgoritm.getInitialPopulation(target_rp);
+            MasterAlgoritm.bindPopulationsFromDifferentKP(current_population, kp ,target_rp);
+            // генерации шаг 6
             for (int tg = 1; tg <= target_tg; tg++){
                 //выделение элиты
-                new_population = MasterAlgoritm.sortElite(target_so, target_rp, new_population);
+                current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
 
                 //Кроссинговер
-                data = MasterAlgoritm.doCrossover(target_rp, target_ps, new_population);
+                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
             }
             System.out.println(data);
         }
