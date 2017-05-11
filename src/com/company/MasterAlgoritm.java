@@ -14,6 +14,7 @@ public class MasterAlgoritm {
     public static ArrayList<Double> length_route = new ArrayList<>();
     public static ArrayList<Double> fitness_f = new ArrayList<Double>();
     public static ArrayList<Double> copy_fitness_f = new ArrayList<Double>();
+    public static String beastr;
 
 
 
@@ -79,10 +80,34 @@ public class MasterAlgoritm {
     public static String[] sortElite(double so, int rp, String[] new_population){
         // количество элитных
         double ki = (1 - so) * rp;
+        String[] cut_population = new_population;
+        String elite_route;
+//        for (int i = 0; i<ki; i++){
+//            elite_route = getBestRoute(cut_population);
+//            for (int j = 0; j < new_population.length; j++){
+//                // TODO: очистить cut_population
+//                for (int c=0; c<cut_population.length;c++){
+//                    cut_population[c]="";
+//                }
+//                // если данный маршрут не выбран, в качестве элиты, то оставляем его в популяции
+//                if(!new_population[j].equals(elite_route)){
+//                    cut_population[j] = new_population[j];
+//                }else{
+//                    //TODO: не оставлять = не записывать в популяцию
+//                    // TODO: + сохранить индекс для записи, чтобы не было пустого элемента, иначе проверять при считывании позже
+//
+//                }
+//            }
+//        }
+
 
 
         return new_population;
     }
+
+//    public static String getBestRoute(String[] population){
+//
+//    }
 
     public static String doCrossover(int rp, double ps, String[] population){
         // выбираем хромосому с лучшим значением
@@ -101,7 +126,7 @@ public class MasterAlgoritm {
         }
 //        System.out.println(population[key]);
 
-        String beastr = "best_fitness : "+best_ff+"  best_route: "+population[key];
+        beastr = "Лучшее значение целевой функции : "+best_ff+"  Лучший маршрут: "+population[key];
 
         // порядковый номер i-ой итерации для поиска второго родителя по rp
 

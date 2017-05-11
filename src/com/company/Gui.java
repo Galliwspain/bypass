@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.Math.Galgorithm;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,11 +13,27 @@ import java.util.Random;
     public class Gui extends JFrame {
         JLabel[] label = new JLabel[5];
         JTextField[] field = new JTextField[5];
-        JButton button = new JButton("Send");
-        JButton plus = new JButton("Plus");
-        JButton close_button = new JButton("Exit");
-        int correct_answers = 0;
-        int [] results = new int[5];
+        JButton accept = new JButton("Применить");
+        JButton def = new JButton("Значения по-умолчанию");
+        JLabel label_1;
+        JLabel label_2;
+        JLabel label_3;
+        JLabel label_4;
+        JLabel label_5;
+        JLabel label_6;
+        JLabel label_7;
+        JLabel label_8;
+        JLabel label_9;
+        JLabel label_10;
+
+        JTextField field_1;
+        JTextField field_2;
+
+
+        public static String[] params = new String[6];
+        public static String[] figures = new String[6];
+        public static Boolean parsed = new Boolean(false);
+
 
         Gui(){
             super("Обход прямоугольников");
@@ -27,9 +45,8 @@ import java.util.Random;
             Container c = getContentPane();
             c.setLayout(new FlowLayout(FlowLayout.CENTER, 20,30));
 
-            JTextField field_8;
 
-            field_8= new JTextField(15);
+
 
 
 
@@ -40,104 +57,106 @@ import java.util.Random;
 
 //            Container c = getContentPane();
 //            c.setLayout(new FlowLayout(FlowLayout.CENTER, 20,30));
-            JLabel label_1;
-            JLabel label_2;
-            JLabel label_3;
-            JLabel label_4;
-            JLabel label_5;
-            JLabel label_6;
-            JLabel label_7;
-            JLabel label_8;
-            JLabel label_9;
-            JLabel label_10;
+//            JLabel label_1;
+//            JLabel label_2;
+//            JLabel label_3;
+//            JLabel label_4;
+//            JLabel label_5;
+//            JLabel label_6;
+//            JLabel label_7;
+//            JLabel label_8;
+//            JLabel label_9;
+//
+//            JTextField field_1;
+//            JTextField field_2;
 
-            JTextField field_1;
-            JTextField field_2;
-            JTextField field_3;
-            JTextField field_4;
-            JTextField field_5;
-            JTextField field_6;
-            JTextField field_7;
-            JTextField field_8;
-            JTextField field_9;
-            JTextField field_10;
+            label_1 = new JLabel("Параметры:");
+            label_2 = new JLabel("Размер популяции - RP");
+            label_3 = new JLabel("Число генераций - TG");
+            label_4 = new JLabel("Вероятность скрещивания - PS");
+            label_5 = new JLabel("Вероятность мутации - PM");
+            label_6 = new JLabel("Степень обновления популяции - SO");
+            label_7 = new JLabel("Количество попыток - KP");
+            label_8 = new JLabel("Введите параметры в формате: RP;TG;PS;PM;SO;KP");
+            label_9 = new JLabel("Введите точки фигуры в формате a_x, a_y, c_x, c_y,разделяя фигуры \";\"");
+            label_10 = new JLabel("");
 
-            JButton successButton;
 
-            label_1 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_2 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_3 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_4 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_5 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_6 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_7 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_8 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_9 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
-            label_10 = new JLabel("Введите точки фигуры в формате {a_x, a_y, c_x, c_y}");
+            field_1= new JTextField(35);
+            field_2= new JTextField(35);
 
-            field_1= new JTextField(15);
-            field_2= new JTextField(15);
-            field_3= new JTextField(15);
-            field_4= new JTextField(15);
-            field_5= new JTextField(15);
-            field_6= new JTextField(15);
-            field_7= new JTextField(15);
-            field_8= new JTextField(15);
-            field_9= new JTextField(15);
-            field_10= new JTextField(15);
 
-            successButton = new JButton("OK");
-
+            //отрисовка
             this.add(label_1);
-            this.add(field_1);
             this.add(label_2);
-            this.add(field_2);
             this.add(label_3);
-            this.add(field_3);
             this.add(label_4);
-            this.add(field_4);
             this.add(label_5);
-            this.add(field_5);
             this.add(label_6);
-            this.add(field_6);
             this.add(label_7);
-            this.add(field_7);
-//            c.add(label_8);
-//            c.add(field_8);
-//            c.add(label_9);
-//            c.add(field_9);
-//            c.add(label_10);
-//            c.add(field_10);
-
+            this.add(label_8);
+            this.add(field_1);
+            this.add(label_9);
+            this.add(field_2);
 
             this.setVisible(true);
-            this.add(plus);
-            this.add(button);
+            this.add(def);
+            this.add(accept);
+            this.add(label_10);
 
-            Handler hd = new Handler();
-            button.addActionListener(hd);
+            Handler next = new Handler();
+            accept.addActionListener(next);
 
-            Handler plus = new Handler();
-            button.addActionListener(plus);
+            Handler def_data = new Handler();
+            def.addActionListener(def_data);
         }
 
         class Handler implements ActionListener{
 
             public void actionPerformed(ActionEvent e){
 
-                if(e.getSource() == plus){
+                if(e.getSource() == def){
+                    field_1.setText("20;20;0.7;0.05;0.95;3");
+                    /** {0, 1, 2, 2};
+                        {0, 3, 3, 7};
+                        {1, 4, 2, 5};
+                        {4, 0, 5, 2};
+                        {4, 3, 6, 4};
+                     */
+                    field_2.setText("0,1,2,2;0,3,3,7;1,4,2,5;4,0,5,2;4,3,6,4");
+//                    params = field_1.getText().split(";");
+//                    figures = field_2.getText().split(";");
                 }
 
 
                 ArrayList<String> data_from_gui = new ArrayList<>();
 
-                if(e.getSource() == button){
-                    for (int i=0; i<field.length; i++) {
-                        if (!field[i].getText().isEmpty()) {
-                            data_from_gui.add(field[i].getText());
-                        }
+                if(e.getSource() == accept){
+                    if (!(field_1.getText().isEmpty() & field_2.getText().isEmpty())){
+                        params = field_1.getText().split(";");
+                        figures = field_2.getText().split(";");
+                        Galgorithm.contourCount = figures.length;
+                        // данные получены
+                        parsed = true;
+                        Galgorithm.gui_initial(figures);
+                        Galgorithm.gui_process(params);
+//                        Galgorithm.initial();
+//                        Galgorithm.process();
+                        accept.setVisible(false);
+                        def.setVisible(false);
+                        JOptionPane.showMessageDialog(null, MasterAlgoritm.beastr);
+                        label_10.setText(MasterAlgoritm.beastr);
+
+
                     }
-                    System.out.println("data_from_json: "+ data_from_gui.get(0));
+
+
+//                    for (int i=0; i<field.length; i++) {
+//                        if (!field[i].getText().isEmpty()) {
+//                            data_from_gui.add(field[i].getText());
+//                        }
+//                    }
+//                    System.out.println("data_from_json: "+ data_from_gui.get(0));
 
 //                    switch(correct_answers){
 //                        case 5: JOptionPane.showMessageDialog(null, "Your mark is 5. Congratulations");

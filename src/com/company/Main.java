@@ -6,9 +6,10 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("INFO: start application");
-//        Gui gui = new Gui();
-//        gui.setVisible(true);
-        Galgorithm.initial();
-        Galgorithm.process();
+//        get_params gui = new get_params();
+
+        Gui gui = new Gui();
+        gui.setVisible(true);
+
     }
 }

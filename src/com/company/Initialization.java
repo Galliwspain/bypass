@@ -98,6 +98,7 @@ public class Initialization {
     }
 
     public static double getPerimetr(double[] corners){
+        // TODO: возможно строгие рамки
         if (corners.length == 4){
             double side1 = corners[2] - corners[0];
             double side2 = corners[3] - corners[1];
