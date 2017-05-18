@@ -15,6 +15,7 @@ import java.util.Random;
         JTextField[] field = new JTextField[5];
         JButton accept = new JButton("Применить");
         JButton def = new JButton("Значения по-умолчанию");
+        JButton big_def = new JButton("Большие значения(25)");
         JLabel label_1;
         JLabel label_2;
         JLabel label_3;
@@ -101,6 +102,7 @@ import java.util.Random;
 
             this.setVisible(true);
             this.add(def);
+            this.add(big_def);
             this.add(accept);
             this.add(label_10);
 
@@ -109,6 +111,9 @@ import java.util.Random;
 
             Handler def_data = new Handler();
             def.addActionListener(def_data);
+
+            Handler big_def_data = new Handler();
+            big_def.addActionListener(big_def_data);
         }
 
         class Handler implements ActionListener{
@@ -128,6 +133,23 @@ import java.util.Random;
 //                    figures = field_2.getText().split(";");
                 }
 
+                if(e.getSource() == big_def){
+                    field_1.setText("20;20;0.7;0.05;0.95;3");
+                    /** {0, 1, 2, 2};
+                     {0, 3, 3, 7};
+                     {1, 4, 2, 5};
+                     {4, 0, 5, 2};
+                     {4, 3, 6, 4};
+                     */
+                    field_2.setText(
+                            "0,1,2,2;0,3,3,7;1,4,2,6;4,0,5,2;4,3,7,10;" +
+                                    "5,4,6,9;0,8,1,10;0,11,8,18;0,12,1,14;0,15,7,17;"+
+                                    "2,12,7,14;9,0,10,8;9,9,10,18;11,0,12,8;11,9,12,18;"+
+                                    "13,0,15,2;13,3,15,5;13,6,15,8;13,9,15,11;13,12,15,14;"+
+                                    "13,15,15,17;13,18,15,20;0,19,12,20;16,0,20,20;17,1,19,19"
+                    );
+                }
+
 
                 ArrayList<String> data_from_gui = new ArrayList<>();
 
@@ -144,6 +166,7 @@ import java.util.Random;
 //                        Galgorithm.process();
                         accept.setVisible(false);
                         def.setVisible(false);
+                        big_def.setVisible(false);
                         JOptionPane.showMessageDialog(null, MasterAlgoritm.beastr);
                         label_10.setText(MasterAlgoritm.beastr);
 
