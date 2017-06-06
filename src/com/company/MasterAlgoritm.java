@@ -14,6 +14,7 @@ public class MasterAlgoritm {
     public static ArrayList<Double> length_route = new ArrayList<>();
     public static ArrayList<Double> fitness_f = new ArrayList<Double>();
     public static ArrayList<Double> copy_fitness_f = new ArrayList<Double>();
+    public static ArrayList<String> elite_list = new ArrayList<String>();
     public static String beastr;
 
 
@@ -80,34 +81,59 @@ public class MasterAlgoritm {
     public static String[] sortElite(double so, int rp, String[] new_population){
         // количество элитных
         double ki = (1 - so) * rp;
-        String[] cut_population = new_population;
+
+        ArrayList<String> cut_population = new ArrayList<String>();
+        String [] return_population = new String[new_population.length - (int)ki];
+
+        for (int np = 0; np < new_population.length; np++){
+            cut_population.add(new_population[np]);
+        }
+//        String[] cut_population = new_population;
         String elite_route;
-//        for (int i = 0; i<ki; i++){
-//            elite_route = getBestRoute(cut_population);
-//            for (int j = 0; j < new_population.length; j++){
-//                // TODO: очистить cut_population
-//                for (int c=0; c<cut_population.length;c++){
-//                    cut_population[c]="";
-//                }
-//                // если данный маршрут не выбран, в качестве элиты, то оставляем его в популяции
-//                if(!new_population[j].equals(elite_route)){
-//                    cut_population[j] = new_population[j];
-//                }else{
-//                    //TODO: не оставлять = не записывать в популяцию
-//                    // TODO: + сохранить индекс для записи, чтобы не было пустого элемента, иначе проверять при считывании позже
-//
-//                }
-//            }
-//        }
+        for (int i = 0; i<(int)ki; i++){
+            //записываем для поиска в уже обрезанной популяции
+            String[] source_population = new String[cut_population.size()];
+            for (int source = 0; source<cut_population.size();source++){
+                source_population[source]=cut_population.get(source);
+            }
+            elite_route = getBestRoute(source_population);
+            cut_population.clear();
+            for (int j = 0; j < source_population.length; j++){
+                // если данный маршрут не выбран, в качестве элиты, то оставляем его в популяции
+                //TODO: хорошо бы сделать equals, но new_population.length =100, и много  null'ов
+                if(source_population[j]==(elite_route)){
+                    elite_list.add(source_population[j]);
+                }else{
+                    cut_population.add(source_population[j]);
+                }
+            }
+        }
 
+        // переводим arrayList в массив
+        for (int r = 0;r<cut_population.size();r++){
+            return_population[r] = cut_population.get(r);
+        }
 
-
-        return new_population;
+        return return_population;
     }
 
-//    public static String getBestRoute(String[] population){
-//
-//    }
+    public static String getBestRoute(String[] population){
+        // выбираем хромосому с лучшим значением
+        for (int i = 0; i < population.length; i++){
+            fitnessFunction(String.valueOf(population[i]));
+        }
+        double best_ff = fitnessSortBest(fitness_f);
+//        System.out.println("best_fitness: "+best_ff);
+        int key = -1;
+        for (int k=0;k<fitness_f.size();k++){
+            if (best_ff == fitness_f.get(k)){
+                key=k;
+                break;
+            }
+        }
+        beastr = "to alert";
+        return population[key];
+    }
 
     public static String doCrossover(int rp, double ps, String[] population){
         // выбираем хромосому с лучшим значением
@@ -182,7 +208,9 @@ public class MasterAlgoritm {
             }
         }
         template_fitness = 0;
-        for(double item : length_route){template_fitness+=item;}
+        for(double item : length_route){
+            template_fitness+=item;
+        }
 
         fitness_f.add(template_fitness);
         length_route.clear();

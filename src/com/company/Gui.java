@@ -13,9 +13,9 @@ import java.util.Random;
     public class Gui extends JFrame {
         JLabel[] label = new JLabel[5];
         JTextField[] field = new JTextField[5];
-        JButton accept = new JButton("Применить");
-        JButton def = new JButton("Значения по-умолчанию");
-        JButton big_def = new JButton("Большие значения(25)");
+        JButton accept = new JButton("Вычислить");
+        JButton def = new JButton("5 случайных фигур");
+        JButton big_def = new JButton("25 случайных фигур");
         JLabel label_1;
         JLabel label_2;
         JLabel label_3;
@@ -45,6 +45,18 @@ import java.util.Random;
 
             Container c = getContentPane();
             c.setLayout(new FlowLayout(FlowLayout.CENTER, 20,30));
+//            description.setLayout(new BoxLayout(description,BoxLayout.X_AXIS));
+//            description.setLayout(new GridLayout());
+
+
+
+//            Container fields = getContentPane();
+//            fields.setLayout(new FlowLayout(FlowLayout.CENTER,20,30));
+
+
+//            JPanel c = new JPanel();
+//            c.setLayout(new BoxLayout(c, BoxLayout.Y_AXIS));
+
 
 
 
@@ -99,12 +111,14 @@ import java.util.Random;
             this.add(field_1);
             this.add(label_9);
             this.add(field_2);
-
             this.setVisible(true);
+
             this.add(def);
             this.add(big_def);
             this.add(accept);
             this.add(label_10);
+
+
 
             Handler next = new Handler();
             accept.addActionListener(next);

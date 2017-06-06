@@ -189,11 +189,12 @@ public class Galgorithm{
             for (int tg = 1; tg <= target_tg; tg++){
                 //выделение элиты
                 current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
+                //TODO: приходит 100 - elite_list.size() элементов, где куча null'ов
 
                 //Кроссинговер
-                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
+//                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
             }
-            System.out.println(data);
+//            System.out.println(data);
         }
 
         /** проверка заполненности общей бызы популяций */
