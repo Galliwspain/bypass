@@ -9,7 +9,7 @@ public class MasterAlgoritm {
 
     public static ArrayList<Integer> template_route = new ArrayList<>(0);
     public static Random random = new Random();
-    public static String [] init_population = new String [100];
+    public static String [] init_population;
     public static String [][] common_population = new String[10][150];
     public static ArrayList<Double> length_route = new ArrayList<>();
     public static ArrayList<Double> fitness_f = new ArrayList<Double>();
@@ -22,6 +22,8 @@ public class MasterAlgoritm {
 
     public static String [] getInitialPopulation(int current_rp){
 
+        // инициализирую массив, известным числом особей в популяции, чтобы не было null'ов
+        init_population = new String[current_rp];
             for (int i = 0; i < current_rp; i++) {
                 init_population[i] = "0";
             }
@@ -131,36 +133,74 @@ public class MasterAlgoritm {
                 break;
             }
         }
+        // для модалки в gui
         beastr = "to alert";
+
         return population[key];
     }
 
-    public static String doCrossover(int rp, double ps, String[] population){
+    public static int Crossover(int current_size, double ps, String[] population){
         // выбираем хромосому с лучшим значением
-        for (int i = 0; i < population.length; i++){
-            fitnessFunction(String.valueOf(population[i]));
-        }
-        copy_fitness_f.addAll(fitness_f);
-        double best_ff = fitnessSortBest(fitness_f);
-//        System.out.println("best_fitness: "+best_ff);
-        int key = -1;
-        for (int k=0;k<fitness_f.size();k++){
-            if (best_ff == fitness_f.get(k)){
-                key=k;
-                break;
+        String best_parent = getBestRoute(population);
+        ArrayList<String> candidates = new ArrayList<String>();
+        ArrayList<String> new_family = new ArrayList<String>();
+
+        //        beastr = "Лучшее значение целевой функции : "+best_ff+"  Лучший маршрут: "+population[key];
+
+        //TODO: порядковый номер i-ой итерации для поиска второго родителя по rp
+        for (int i = 0; i < current_size;i++){
+            if (!population[i].equals(best_parent)){
+                //если rnd<ps, то выбираем i-ую хромосому для скрешивания
+                if (ps > Math.random()){
+                    candidates.add(population[i]);
+                }
             }
         }
-//        System.out.println(population[key]);
+        for (String item : candidates){
+            new_family.add(doCrossover(best_parent, item));
 
-        beastr = "Лучшее значение целевой функции : "+best_ff+"  Лучший маршрут: "+population[key];
+        }
 
-        // порядковый номер i-ой итерации для поиска второго родителя по rp
+        return new_family.size();
+    }
 
-        // 0<=rnd<1
+    public static String doCrossover(String best_parent, String candidate_parent){
+        String child;
+        String[] first_parent = new String[best_parent.length()];
+        String[] second_parent = new String[candidate_parent.length()];
+        String stash_first_gen;
 
-        // если rnd<ps, то выбираем i-ую хромосому
-        return beastr;
+        first_parent = best_parent.split(":");
+        second_parent = candidate_parent.split(":");
 
+        if (!first_parent[1].equals(second_parent[1])){
+            // 1. прячем обменный ген первого родителя
+            stash_first_gen = first_parent[1];
+            // 2. меняем первые гены у родителей
+            first_parent[1] = second_parent[1];
+            second_parent[1] = stash_first_gen;
+            // 3. ищем повторы для дальнейшего соблюдения уникальности генов в маршруте
+            //исключаем 0-ли вначале и конце и первый ген
+            for (int i = 2;i<first_parent.length-2;i++){
+                if(first_parent[1].equals(first_parent[i])){
+                    // 4. в stash_first_gen лежит недостающий в первом родителе ген
+                    first_parent[i] = stash_first_gen;
+                }
+            }
+            // 5. ищем повторы для дальнейшего соблюдения уникальности генов в маршруте
+            //исключаем 0-ли вначале и конце и первый ген
+            for (int i = 2;i<second_parent.length-2;i++){
+                if(second_parent[1].equals(second_parent[i])){
+                    // 6. в first_parent[1] лежит недостающий ген во втором родителе
+                    second_parent[i] = first_parent[1];
+                }
+            }
+        }
+
+
+
+
+        return child;
     }
 
     public static void fitnessFunction(String route){

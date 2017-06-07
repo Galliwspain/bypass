@@ -19,7 +19,7 @@ public class Galgorithm{
     public static String [][] cardCutting = new String[30][30];
     public static ArrayList<String> transaction = new ArrayList<String>();
     public static boolean [][] structureMatrix = new boolean[contourCount+1][contourCount+1];
-    public static String current_population [] = new String[150];
+    public static String current_population [];
     public static String[] gui_contours = new String[4];
     public static double[] gui_figure = new double[4];
 
@@ -146,7 +146,7 @@ public class Galgorithm{
                 current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
 
                 //Кроссинговер
-                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
+//                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
             }
             System.out.println(data);
         }
@@ -189,10 +189,12 @@ public class Galgorithm{
             for (int tg = 1; tg <= target_tg; tg++){
                 //выделение элиты
                 current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
-                //TODO: приходит 100 - elite_list.size() элементов, где куча null'ов
 
                 //Кроссинговер
 //                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
+//                current_population = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
+                // отправляется текущий размер популяции
+                int size = MasterAlgoritm.Crossover(current_population.length, target_ps, current_population);
             }
 //            System.out.println(data);
         }
