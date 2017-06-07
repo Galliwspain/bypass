@@ -187,16 +187,23 @@ public class Galgorithm{
             MasterAlgoritm.bindPopulationsFromDifferentKP(current_population, kp ,target_rp);
             // генерации шаг 6
             for (int tg = 1; tg <= target_tg; tg++){
-                //выделение элиты
+                // Элитизм
                 current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
 
                 //Кроссинговер
 //                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
 //                current_population = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
                 // отправляется текущий размер популяции
-                int size = MasterAlgoritm.Crossover(current_population.length, target_ps, current_population);
+                current_population = MasterAlgoritm.Crossover(current_population.length, target_ps, current_population);
+
+                // Мутации
+                current_population = MasterAlgoritm.Mutation(current_population.length,target_pm, current_population);
+
             }
-//            System.out.println(data);
+//            System.out.println(current_population.length);
+//            for (String item : current_population){
+//                System.out.println(item);
+//            }
         }
 
         /** проверка заполненности общей бызы популяций */

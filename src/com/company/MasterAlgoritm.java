@@ -139,11 +139,12 @@ public class MasterAlgoritm {
         return population[key];
     }
 
-    public static int Crossover(int current_size, double ps, String[] population){
+    public static String[] Crossover(int current_size, double ps, String[] population){
         // выбираем хромосому с лучшим значением
         String best_parent = getBestRoute(population);
         ArrayList<String> candidates = new ArrayList<String>();
         ArrayList<String> new_family = new ArrayList<String>();
+        String[] return_population_crossover;
 
         //        beastr = "Лучшее значение целевой функции : "+best_ff+"  Лучший маршрут: "+population[key];
 
@@ -153,22 +154,39 @@ public class MasterAlgoritm {
                 //если rnd<ps, то выбираем i-ую хромосому для скрешивания
                 if (ps > Math.random()){
                     candidates.add(population[i]);
+                }else{
+                    // не повезло - оставляем в членах семьи
+                    new_family.add(population[i]);
                 }
             }
         }
+
         for (String item : candidates){
             new_family.add(doCrossover(best_parent, item));
+            new_family.add(item);
 
         }
+        // добавляем лучшего родителя
+        new_family.add(best_parent);
 
-        return new_family.size();
+        return_population_crossover = new String[new_family.size()];
+
+        for (int i = 0; i<new_family.size();i++){
+            return_population_crossover[i]=new_family.get(i);
+        }
+
+        return return_population_crossover;
     }
 
     public static String doCrossover(String best_parent, String candidate_parent){
-        String child;
+        String best_child;
+        String first_child = "";
+        String second_child = "";
         String[] first_parent = new String[best_parent.length()];
         String[] second_parent = new String[candidate_parent.length()];
         String stash_first_gen;
+        String[] child_candidates = new String[2];
+
 
         first_parent = best_parent.split(":");
         second_parent = candidate_parent.split(":");
@@ -196,11 +214,79 @@ public class MasterAlgoritm {
                 }
             }
         }
+        for (int i=0;i<first_parent.length-1;i++) {
+            first_child = first_child.concat(String.valueOf(first_parent[i])+":");
+        }
+        first_child=first_child.concat("0");
 
+        for (int i=0;i<second_parent.length-1;i++) {
+            second_child = second_child.concat(String.valueOf(second_parent[i])+":");
+        }
+        second_child=second_child.concat("0");
 
+        child_candidates[0]=first_child;
+        child_candidates[1]=second_child;
 
+        best_child = getBestRoute(child_candidates);
 
-        return child;
+        return best_child;
+    }
+
+    public static String[] Mutation(int rp, double pm, String[] population){
+        int count_of_gen = population[0].split(":").length;
+        int rnd_first;
+        int rnd_second;
+        ArrayList<String> candidates_mutation = new ArrayList<>();
+        ArrayList<String> family = new ArrayList<>();
+        ArrayList<String> after_mutation = new ArrayList<>();
+        String temp_chromosome = "";
+        String[] return_population_mutation;
+
+        do {
+            System.out.println("check");
+            rnd_first = random.nextInt(count_of_gen - 1) + 1;
+            rnd_second = random.nextInt(count_of_gen - 1) + 1;
+        }while (rnd_first==rnd_second);
+
+        for(int i = 0; i<population.length;i++) {
+            if (pm > Math.random()) {
+                candidates_mutation.add(population[i]);
+            }else{
+                family.add(population[i]);
+            }
+        }
+        if (!candidates_mutation.isEmpty()) {
+            // каждого претендента преобразуем в массив, промутируем, вернем в строку
+            for (String item : candidates_mutation) {
+                // заносим в массив
+                String[] mut_chromosome = item.split(":");
+                // вытаскиваем нужные значения
+                String changer_first = mut_chromosome[rnd_first];
+                String changer_second = mut_chromosome[rnd_second];
+                // меняем нужные значения
+                mut_chromosome[rnd_first] = changer_second;
+                mut_chromosome[rnd_second] = changer_first;
+                // преобразуем в строку нужного формата
+                for (int i = 0; i < mut_chromosome.length - 1; i++) {
+                    temp_chromosome = temp_chromosome.concat(mut_chromosome[i] + ":");
+                }
+                temp_chromosome = temp_chromosome.concat("0");
+                // добавляем в список промутированных
+                after_mutation.add(temp_chromosome);
+                temp_chromosome = "";
+            }
+            for(String item : after_mutation){
+                family.add(item);
+            }
+        }
+        after_mutation.clear();
+
+        return_population_mutation = new String[family.size()];
+        for (int item = 0; item<family.size();item++){
+            return_population_mutation[item] = family.get(item);
+        }
+        return return_population_mutation;
+
     }
 
     public static void fitnessFunction(String route){
