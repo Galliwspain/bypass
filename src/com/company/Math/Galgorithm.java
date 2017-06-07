@@ -19,7 +19,7 @@ public class Galgorithm{
     public static String [][] cardCutting = new String[30][30];
     public static ArrayList<String> transaction = new ArrayList<String>();
     public static boolean [][] structureMatrix = new boolean[contourCount+1][contourCount+1];
-    public static String current_population [];
+    public static String[] current_population;
     public static String[] gui_contours = new String[4];
     public static double[] gui_figure = new double[4];
 
@@ -167,7 +167,6 @@ public class Galgorithm{
     public static void gui_process(String[] params){
         /** старт выполнения*/
         System.out.println("INFO: start gui_process");
-        // TODO: размер популяции - rp нужно получить из frontend
         int target_rp = Integer.parseInt(params[0]);
         int target_tg = Integer.parseInt(params[1]);
         double target_ps = Double.parseDouble(params[2]);
@@ -175,10 +174,6 @@ public class Galgorithm{
         double target_so = Double.parseDouble(params[4]);
 //        int target_kp = Integer.parseInt(params[5]);
         int target_kp = 1;
-
-
-
-        String data = "";
 
         // попытки шаг 4
         for (int kp = 0; kp < target_kp; kp++){
@@ -191,14 +186,18 @@ public class Galgorithm{
                 current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
 
                 //Кроссинговер
-//                data = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
-//                current_population = MasterAlgoritm.doCrossover(target_rp, target_ps, current_population);
-                // отправляется текущий размер популяции
-                current_population = MasterAlgoritm.Crossover(current_population.length, target_ps, current_population);
+                current_population = MasterAlgoritm.crossover(current_population.length, target_ps, current_population);
 
                 // Мутации
-                current_population = MasterAlgoritm.Mutation(current_population.length,target_pm, current_population);
+                current_population = MasterAlgoritm.mutation(current_population.length,target_pm, current_population);
 
+                // Селекция
+
+                current_population = MasterAlgoritm.selection(target_rp, current_population);
+
+                // Получение лучшего маршрута из обработанной популяции
+                String best_route_from_generation = MasterAlgoritm.getBestRoute(current_population);
+                System.out.println(best_route_from_generation);
             }
 //            System.out.println(current_population.length);
 //            for (String item : current_population){

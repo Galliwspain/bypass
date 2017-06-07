@@ -125,7 +125,7 @@ public class MasterAlgoritm {
             fitnessFunction(String.valueOf(population[i]));
         }
         double best_ff = fitnessSortBest(fitness_f);
-//        System.out.println("best_fitness: "+best_ff);
+
         int key = -1;
         for (int k=0;k<fitness_f.size();k++){
             if (best_ff == fitness_f.get(k)){
@@ -134,19 +134,45 @@ public class MasterAlgoritm {
             }
         }
         // для модалки в gui
-        beastr = "to alert";
+        beastr = "Лучшее значение целевой функции : "+best_ff+"  Лучший маршрут: "+population[key];
 
-        return population[key];
+
+        fitness_f.clear();
+        String return_info = population[key];
+// TODO:       return_info = return_info.concat("/"+best_ff);
+
+        return return_info;
+    }
+    public static ArrayList<String> getBestRoutesList(int target_count, String[] population){
+       ArrayList <Double> best_target_count = new ArrayList<>();
+       ArrayList <String> line_of_best_routes = new ArrayList<>();
+
+        for (int i = 0; i < population.length; i++){
+            fitnessFunction(String.valueOf(population[i]));
+        }
+        best_target_count = fitnessSortBestSelection(target_count, fitness_f);
+        // достаем маршруты с лучшими значениями
+
+
+        for(int i =0; i<best_target_count.size();i++){
+            for (int j = 0; j<fitness_f.size();j++) {
+                if (best_target_count.get(i)==fitness_f.get(j)){
+                    line_of_best_routes.add(population[j]);
+                    break;
+                }
+            }
+        }
+        fitness_f.clear();
+        return line_of_best_routes;
     }
 
-    public static String[] Crossover(int current_size, double ps, String[] population){
+    public static String[] crossover(int current_size, double ps, String[] population){
         // выбираем хромосому с лучшим значением
         String best_parent = getBestRoute(population);
         ArrayList<String> candidates = new ArrayList<String>();
         ArrayList<String> new_family = new ArrayList<String>();
         String[] return_population_crossover;
 
-        //        beastr = "Лучшее значение целевой функции : "+best_ff+"  Лучший маршрут: "+population[key];
 
         //TODO: порядковый номер i-ой итерации для поиска второго родителя по rp
         for (int i = 0; i < current_size;i++){
@@ -232,7 +258,7 @@ public class MasterAlgoritm {
         return best_child;
     }
 
-    public static String[] Mutation(int rp, double pm, String[] population){
+    public static String[] mutation(int rp, double pm, String[] population){
         int count_of_gen = population[0].split(":").length;
         int rnd_first;
         int rnd_second;
@@ -287,6 +313,22 @@ public class MasterAlgoritm {
         }
         return return_population_mutation;
 
+    }
+
+    public static String[] selection (int rp, String[] population){
+        ArrayList<String> best_family_members = new ArrayList<>();
+        String [] return_population_selection = new String[rp];
+        // вычисляем, сколько должно остаться особей после селекции
+        int target_count = rp - elite_list.size();
+        best_family_members = getBestRoutesList(target_count,population);
+        // добавляем элиту
+        for (int i = 0;i<elite_list.size();i++) {
+            best_family_members.add(elite_list.get(i));
+        }
+        for(int i =0;i<best_family_members.size();i++){
+            return_population_selection[i]=best_family_members.get(i);
+        }
+        return return_population_selection;
     }
 
     public static void fitnessFunction(String route){
@@ -368,14 +410,39 @@ public class MasterAlgoritm {
     }
 
     public static double fitnessSortBest(ArrayList<Double> fitness_f){
-        for (int i = 0; i < fitness_f.size(); i++){
-            if (fitness_f.get(i) > fitness_f.get(i++)){
-                double temp = fitness_f.get(i);
-                fitness_f.set(i,fitness_f.get(i++));
-                fitness_f.set(i++, temp);
-                i = -1;
+        double temp;
+        for (int j=0;j<fitness_f.size();j++) {
+            // -j оптимизация, с каждой итерацией самый большой из непередвинутых, предвигается в конец
+            for (int i = 0; i < fitness_f.size()-1-j; i++) {
+                if (fitness_f.get(i) > fitness_f.get(i + 1)) {
+                    temp = fitness_f.get(i);
+                    fitness_f.set(i, fitness_f.get(i + 1));
+                    fitness_f.set(i + 1, temp);
+                }
             }
         }
         return fitness_f.get(0);
+    }
+
+    public static ArrayList<Double> fitnessSortBestSelection(int rp, ArrayList<Double> fitness_f){
+        ArrayList<Double> return_list = new ArrayList<>(fitness_f.size());
+        double temp;
+        for (int j=0; j<fitness_f.size();j++){
+            // -j оптимизация, с каждой итерацией самый большой из непередвинутых, предвигается в конец
+        for (int i = 0; i < fitness_f.size()-1-j; i++) {
+
+            if (fitness_f.get(i) > fitness_f.get(i + 1)) {
+                    temp = fitness_f.get(i);
+                    fitness_f.set(i, fitness_f.get(i + 1));
+                    fitness_f.set(i + 1, temp);
+            }
+
+        }
+        }
+        for(int i =0; i<rp;i++){
+            return_list.add(fitness_f.get(i));
+        }
+
+        return return_list;
     }
 }
