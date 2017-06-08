@@ -22,6 +22,9 @@ public class Galgorithm{
     public static String[] current_population;
     public static String[] gui_contours = new String[4];
     public static double[] gui_figure = new double[4];
+    public static ArrayList<String> tgBestList = new ArrayList<>();
+    public static ArrayList<String> kpBestList = new ArrayList<>();
+
 
 
 
@@ -181,23 +184,19 @@ public class Galgorithm{
             current_population = MasterAlgoritm.getInitialPopulation(target_rp);
             MasterAlgoritm.bindPopulationsFromDifferentKP(current_population, kp ,target_rp);
             // генерации шаг 6
-            for (int tg = 1; tg <= target_tg; tg++){
+            for (int tg = 0; tg < target_tg; tg++){
                 // Элитизм
                 current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
-
                 //Кроссинговер
                 current_population = MasterAlgoritm.crossover(current_population.length, target_ps, current_population);
-
                 // Мутации
                 current_population = MasterAlgoritm.mutation(current_population.length,target_pm, current_population);
-
                 // Селекция
-
                 current_population = MasterAlgoritm.selection(target_rp, current_population);
-
-                // Получение лучшего маршрута из обработанной популяции
-                String best_route_from_generation = MasterAlgoritm.getBestRoute(current_population);
-                System.out.println(best_route_from_generation);
+                // Получение лучшего маршрута и значения фитнес-функции из обработанной популяции
+                tgBestList.add(MasterAlgoritm.getBestRouteFitness(current_population));
+                // Логирование лучшего результата текущей генерации
+                System.out.println("Generation #"+tg+" Best route - "+tgBestList.get(tg));
             }
 //            System.out.println(current_population.length);
 //            for (String item : current_population){

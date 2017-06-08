@@ -139,10 +139,34 @@ public class MasterAlgoritm {
 
         fitness_f.clear();
         String return_info = population[key];
-// TODO:       return_info = return_info.concat("/"+best_ff);
 
         return return_info;
     }
+
+    public static String getBestRouteFitness(String[] population){
+        // выбираем хромосому с лучшим значением
+        for (int i = 0; i < population.length; i++){
+            fitnessFunction(String.valueOf(population[i]));
+        }
+        double best_ff = fitnessSortBest(fitness_f);
+
+        int key = -1;
+        for (int k=0;k<fitness_f.size();k++){
+            if (best_ff == fitness_f.get(k)){
+                key=k;
+                break;
+            }
+        }
+        // для модалки в gui
+        beastr = "Лучшее значение целевой функции : "+best_ff+"  Лучший маршрут: "+population[key];
+
+
+        fitness_f.clear();
+        String return_info = population[key] + "/" + best_ff;
+
+        return return_info;
+    }
+
     public static ArrayList<String> getBestRoutesList(int target_count, String[] population){
        ArrayList <Double> best_target_count = new ArrayList<>();
        ArrayList <String> line_of_best_routes = new ArrayList<>();
@@ -175,7 +199,8 @@ public class MasterAlgoritm {
 
 
         //TODO: порядковый номер i-ой итерации для поиска второго родителя по rp
-        for (int i = 0; i < current_size;i++){
+        for (int i = 0; i < population.length;i++){
+            // TODO: падает с NPE, 3 tg нормаотно проходят
             if (!population[i].equals(best_parent)){
                 //если rnd<ps, то выбираем i-ую хромосому для скрешивания
                 if (ps > Math.random()){
@@ -269,7 +294,6 @@ public class MasterAlgoritm {
         String[] return_population_mutation;
 
         do {
-            System.out.println("check");
             rnd_first = random.nextInt(count_of_gen - 1) + 1;
             rnd_second = random.nextInt(count_of_gen - 1) + 1;
         }while (rnd_first==rnd_second);
