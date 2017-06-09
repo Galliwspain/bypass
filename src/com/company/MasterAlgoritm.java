@@ -16,6 +16,7 @@ public class MasterAlgoritm {
     public static ArrayList<Double> copy_fitness_f = new ArrayList<Double>();
     public static ArrayList<String> elite_list = new ArrayList<String>();
     public static String beastr;
+    public static boolean flag_crossover = false;
 
 
 
@@ -83,13 +84,15 @@ public class MasterAlgoritm {
     public static String[] sortElite(double so, int rp, String[] new_population){
         // количество элитных
         double ki = (1 - so) * rp;
-
+        // флаг для сообщения, что маршрут похожий на элитный уже найден и отложен, чтобы дубли не складывать
+        boolean flag = false;
         ArrayList<String> cut_population = new ArrayList<String>();
         String [] return_population = new String[new_population.length - (int)ki];
 
         for (int np = 0; np < new_population.length; np++){
             cut_population.add(new_population[np]);
         }
+
 //        String[] cut_population = new_population;
         String elite_route;
         for (int i = 0; i<(int)ki; i++){
@@ -100,15 +103,18 @@ public class MasterAlgoritm {
             }
             elite_route = getBestRoute(source_population);
             cut_population.clear();
+
             for (int j = 0; j < source_population.length; j++){
                 // если данный маршрут не выбран, в качестве элиты, то оставляем его в популяции
-                //TODO: хорошо бы сделать equals, но new_population.length =100, и много  null'ов
-                if(source_population[j]==(elite_route)){
+                // проверяем похож ли потомок на элиту и найден ли уже потомок
+                if(source_population[j].equals(elite_route) && !flag){
                     elite_list.add(source_population[j]);
+                    flag = true;
                 }else{
                     cut_population.add(source_population[j]);
                 }
             }
+            flag = false;
         }
 
         // переводим arrayList в массив
@@ -196,11 +202,8 @@ public class MasterAlgoritm {
         ArrayList<String> candidates = new ArrayList<String>();
         ArrayList<String> new_family = new ArrayList<String>();
         String[] return_population_crossover;
-
-
         //TODO: порядковый номер i-ой итерации для поиска второго родителя по rp
         for (int i = 0; i < population.length;i++){
-            // TODO: падает с NPE, 3 tg нормаотно проходят
             if (!population[i].equals(best_parent)){
                 //если rnd<ps, то выбираем i-ую хромосому для скрешивания
                 if (ps > Math.random()){
@@ -209,9 +212,12 @@ public class MasterAlgoritm {
                     // не повезло - оставляем в членах семьи
                     new_family.add(population[i]);
                 }
-            }
+            }else if(!flag_crossover){
+                flag_crossover=true;
+                // не скрешиваем дубли, нет смысла
+            }else{new_family.add(population[i]);}
         }
-
+        flag_crossover=false;
         for (String item : candidates){
             new_family.add(doCrossover(best_parent, item));
             new_family.add(item);
@@ -352,6 +358,7 @@ public class MasterAlgoritm {
         for(int i =0;i<best_family_members.size();i++){
             return_population_selection[i]=best_family_members.get(i);
         }
+        elite_list.clear();
         return return_population_selection;
     }
 

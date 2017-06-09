@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.DoubleAccumulator;
 import com.company.MasterAlgoritm;
 import com.company.Math.Constants;
 import com.company.Initialization;
+import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion;
 
 
 public class Galgorithm{
@@ -22,8 +23,15 @@ public class Galgorithm{
     public static String[] current_population;
     public static String[] gui_contours = new String[4];
     public static double[] gui_figure = new double[4];
-    public static ArrayList<String> tgBestList = new ArrayList<>();
+    public static ArrayList<ArrayList<String>> tgBestList = new ArrayList<ArrayList<String>>();
     public static ArrayList<String> kpBestList = new ArrayList<>();
+    public static String [][] all_statistics;
+    public static String [][] fitness_statistics;
+    public static ArrayList<Double> history_best_finder = new ArrayList<Double>();
+    public static ArrayList<Double> final_best_finder = new ArrayList<Double>();
+    public static Double winner_fitness;
+    public static String winner_route;
+    public static String winner_message = "";
 
 
 
@@ -176,13 +184,16 @@ public class Galgorithm{
         double target_pm = Double.parseDouble(params[3]);
         double target_so = Double.parseDouble(params[4]);
 //        int target_kp = Integer.parseInt(params[5]);
-        int target_kp = 1;
+        int target_kp = 2;
+
+        all_statistics = new String [target_kp][target_tg];
 
         // попытки шаг 4
         for (int kp = 0; kp < target_kp; kp++){
             // шаг 5. Формирование начальной популяции kp-ой попытки
             current_population = MasterAlgoritm.getInitialPopulation(target_rp);
             MasterAlgoritm.bindPopulationsFromDifferentKP(current_population, kp ,target_rp);
+
             // генерации шаг 6
             for (int tg = 0; tg < target_tg; tg++){
                 // Элитизм
@@ -194,15 +205,53 @@ public class Galgorithm{
                 // Селекция
                 current_population = MasterAlgoritm.selection(target_rp, current_population);
                 // Получение лучшего маршрута и значения фитнес-функции из обработанной популяции
-                tgBestList.add(MasterAlgoritm.getBestRouteFitness(current_population));
+//                tgBestList.add(MasterAlgoritm.getBestRouteFitness(current_population));
+                all_statistics[kp][tg] = MasterAlgoritm.getBestRouteFitness(current_population);
+                // отделяем значение функции для вычисления
+
                 // Логирование лучшего результата текущей генерации
-                System.out.println("Generation #"+tg+" Best route - "+tgBestList.get(tg));
+                System.out.println("KP: "+(kp+1)+" Generation #"+(tg+1)+" Best route - "+all_statistics[kp][tg]);
+
             }
-//            System.out.println(current_population.length);
-//            for (String item : current_population){
-//                System.out.println(item);
-//            }
+
         }
+
+        // загрузка в список для передачи функции выбора лцчшего
+        for (int i = 0; i < target_kp; i++){
+            for (int j = 0; j < target_tg; j++){
+                history_best_finder.add(Double.parseDouble(all_statistics[i][j].split("/")[1]));
+                if (j==target_tg-1){
+                    final_best_finder.add(MasterAlgoritm.fitnessSortBest(history_best_finder));
+                    history_best_finder.clear();
+                }
+            }
+        }
+
+        winner_fitness = MasterAlgoritm.fitnessSortBest(final_best_finder);
+        // достаем маршрут по значению фитнес функции
+        for (int i = 0; i < target_kp; i++) {
+            for (int j = 0; j < target_tg; j++) {
+                if(winner_fitness == Double.parseDouble(all_statistics[i][j].split("/")[1])){
+                    winner_route = all_statistics[i][j].split("/")[0];
+                    break;
+                }
+            }
+        }
+        winner_message = "Лучшее значение целевой функции : "+winner_fitness+"  Лучший маршрут: "+ winner_route;
+
+
+        for (int i = 0; i < target_kp; i++){
+            for (int j = 0; j < target_tg; j++){
+                System.out.print(all_statistics[i][j]+" | ");
+            }
+            System.out.println();
+        }
+
+        for (int i = 0; i < final_best_finder.size();i++){
+            System.out.println("Best of KP#"+(i+1)+" = "+final_best_finder.get(i));
+        }
+
+        System.out.println("Лучшее значение целевой функции : "+winner_fitness+"  Лучший маршрут: "+winner_route);
 
         /** проверка заполненности общей бызы популяций */
 //        for (int i = 0; i < target_kp; i++){
