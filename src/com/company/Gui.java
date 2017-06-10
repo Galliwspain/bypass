@@ -10,7 +10,11 @@ import java.util.Random;
 
 
 
+
+
     public class Gui extends JFrame {
+
+        public static long total_time;
         JLabel[] label = new JLabel[5];
         JTextField[] field = new JTextField[5];
         JButton accept = new JButton("Вычислить");
@@ -174,16 +178,21 @@ import java.util.Random;
                         Galgorithm.contourCount = figures.length;
                         // данные получены
                         parsed = true;
+
+                        // включаем таймер
+                        long start, stop;
+                        start = System.currentTimeMillis();
                         Galgorithm.gui_initial(figures);
                         Galgorithm.gui_process(params);
 //                        Galgorithm.initial();
 //                        Galgorithm.process();
+                        stop = System.currentTimeMillis();
+                        total_time = stop - start;
                         accept.setVisible(false);
                         def.setVisible(false);
                         big_def.setVisible(false);
                         JOptionPane.showMessageDialog(null, Galgorithm.winner_message);
                         label_10.setText(MasterAlgoritm.beastr);
-
 
                     }
 

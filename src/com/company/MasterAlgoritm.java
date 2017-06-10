@@ -22,7 +22,19 @@ public class MasterAlgoritm {
 
     // Мониторинг
     public static String low_cost_info;
+    public static long low_cost_time;
+    public static long get_random_chromosome_time;
 
+    public static boolean structureMatrixCheck (int id, ArrayList<Integer> tabu, int figure_count){
+            for (int j = 1; j <= figure_count; j++) {
+                if (Galgorithm.structureMatrix[id][j]){
+                    if (!exist_in_tabu(j,tabu)){
+                        return true;
+                    }
+                }
+            }
+            return false;
+    }
 
     public static String low_cost_route(){
         String chromosome = "";
@@ -31,6 +43,7 @@ public class MasterAlgoritm {
         String current_position = "0.0;0.0";
         ArrayList<String> id_distance = new ArrayList<>();
         ArrayList<Double> distance = new ArrayList<>();
+        ArrayList<String> next_lap = new ArrayList<>();
         int [] int_rectangle;
         int id;
         double x_x;
@@ -38,25 +51,50 @@ public class MasterAlgoritm {
         String best_temp;
 
         for (int j=0;j<figure_count;j++) {
-            for (int i = 0; i < figure_count; i++) {
-                int_rectangle = Initialization.readIntFromJson(Galgorithm.rectanglesData.get(i).toString());
-                id = int_rectangle[0];
-                if (!exist_in_tabu(id, tabu)) {
-                    x_x = int_rectangle[1] - Double.parseDouble(current_position.split(";")[0]);
-                    if (x_x < 0) {
-                        x_x = -1 * x_x;
+                for (int i = 0; i < figure_count; i++) {
+                    int_rectangle = Initialization.readIntFromJson(Galgorithm.rectanglesData.get(i).toString());
+                    id = int_rectangle[0];
+                    // определяем использовалась ли фигура уже и есть ли у этой фигуры ограничения
+//                    if (!exist_in_tabu(id, tabu) && !structureMatrixCheck(id, tabu, figure_count)) {
+                    if (!exist_in_tabu(id, tabu)) {
+                        x_x = int_rectangle[1] - Double.parseDouble(current_position.split(";")[0]);
+                        if (x_x < 0) {
+                            x_x = -1 * x_x;
+                        }
+                        y_y = int_rectangle[2] - Double.parseDouble(current_position.split(";")[1]);
+                        if (y_y < 0) {
+                            y_y = -1 * y_y;
+                        }
+                        id_distance.add(id + "/" + Math.sqrt(Math.pow(x_x, 2) + Math.pow(y_y, 2)));
                     }
-                    y_y = int_rectangle[2] - Double.parseDouble(current_position.split(";")[1]);
-                    if (y_y < 0) {
-                        y_y = -1 * y_y;
-                    }
-                    id_distance.add(id + "/" + Math.sqrt(Math.pow(x_x, 2) + Math.pow(y_y, 2)));
+//                    else {
+//                        // фигуры выбор которых был отложен, должны снова участвовать в отборе
+//                        next_lap.add(int_rectangle[0]+"/"+int_rectangle[1]+"/"+int_rectangle[2]);
+//                    }
                 }
-            }
-            System.out.println("distance: " + id_distance.size() + "count: " + figure_count);
-            for (String item : id_distance) {
-                System.out.println(item);
-            }
+//
+//                if (!next_lap.isEmpty()){
+//                    for (int l = 0; l<next_lap.size();l++){
+//                        if (!structureMatrixCheck(Integer.parseInt(next_lap.get(l).split("/")[0]), tabu, figure_count)){
+//                            x_x = Double.parseDouble(next_lap.get(l).split("/")[1]) - Double.parseDouble(current_position.split(";")[0]);
+//                            if (x_x < 0) {
+//                                x_x = -1 * x_x;
+//                            }
+//                            y_y = Double.parseDouble(next_lap.get(l).split("/")[2]) - Double.parseDouble(current_position.split(";")[1]);
+//                            if (y_y < 0) {
+//                                y_y = -1 * y_y;
+//                            }
+//                            id_distance.add(Integer.parseInt(next_lap.get(l).split("/")[0] + "/" + Math.sqrt(Math.pow(x_x, 2) + Math.pow(y_y, 2)));
+//                        }
+//                    }
+//                }
+//            next_lap.clear();
+
+
+//            System.out.println("distance: " + id_distance.size() + "count: " + figure_count);
+//            for (String item : id_distance) {
+//                System.out.println(item);
+//            }
 
 
             // ищем близжайшую фигуру
@@ -96,12 +134,21 @@ public class MasterAlgoritm {
 
             // Для мониторинга
             low_cost_route_compare = init_population[0];
+            long start, stop;
+            start = System.currentTimeMillis();
             low_cost_info = compare_with_low_cost(low_cost_route_compare);
-        System.out.println("low_cost_info: "+low_cost_info);
+            stop = System.currentTimeMillis();
+            low_cost_time = stop - start;
 
             for (int j = 1; j < current_rp; j++) {
                 template_route.add(0);
+
+                start = System.currentTimeMillis();
+
                 init_population[j] = getRandomChromosome();
+
+                stop = System.currentTimeMillis();
+                get_random_chromosome_time = stop - start;
             }
         return init_population;
     }
@@ -281,7 +328,6 @@ public class MasterAlgoritm {
         ArrayList<String> candidates = new ArrayList<String>();
         ArrayList<String> new_family = new ArrayList<String>();
         String[] return_population_crossover;
-        //TODO: порядковый номер i-ой итерации для поиска второго родителя по rp
         for (int i = 0; i < population.length;i++){
             if (!population[i].equals(best_parent)){
                 //если rnd<ps, то выбираем i-ую хромосому для скрешивания
@@ -335,7 +381,7 @@ public class MasterAlgoritm {
             second_parent[1] = stash_first_gen;
             // 3. ищем повторы для дальнейшего соблюдения уникальности генов в маршруте
             //исключаем 0-ли вначале и конце и первый ген
-            for (int i = 2;i<first_parent.length-2;i++){
+            for (int i = 2;i<first_parent.length-1;i++){
                 if(first_parent[1].equals(first_parent[i])){
                     // 4. в stash_first_gen лежит недостающий в первом родителе ген
                     first_parent[i] = stash_first_gen;
@@ -343,7 +389,7 @@ public class MasterAlgoritm {
             }
             // 5. ищем повторы для дальнейшего соблюдения уникальности генов в маршруте
             //исключаем 0-ли вначале и конце и первый ген
-            for (int i = 2;i<second_parent.length-2;i++){
+            for (int i = 2;i<second_parent.length-1;i++){
                 if(second_parent[1].equals(second_parent[i])){
                     // 6. в first_parent[1] лежит недостающий ген во втором родителе
                     second_parent[i] = first_parent[1];
