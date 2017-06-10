@@ -17,9 +17,72 @@ public class MasterAlgoritm {
     public static ArrayList<String> elite_list = new ArrayList<String>();
     public static String beastr;
     public static boolean flag_crossover = false;
+    public static double cost;
+    public static String low_cost_route_compare;
+
+    // Мониторинг
+    public static String low_cost_info;
 
 
+    public static String low_cost_route(){
+        String chromosome = "";
+        int figure_count = Galgorithm.rectanglesData.size();
+        ArrayList<Integer> tabu = new ArrayList<>();
+        String current_position = "0.0;0.0";
+        ArrayList<String> id_distance = new ArrayList<>();
+        ArrayList<Double> distance = new ArrayList<>();
+        int [] int_rectangle;
+        int id;
+        double x_x;
+        double y_y;
+        String best_temp;
 
+        for (int j=0;j<figure_count;j++) {
+            for (int i = 0; i < figure_count; i++) {
+                int_rectangle = Initialization.readIntFromJson(Galgorithm.rectanglesData.get(i).toString());
+                id = int_rectangle[0];
+                if (!exist_in_tabu(id, tabu)) {
+                    x_x = int_rectangle[1] - Double.parseDouble(current_position.split(";")[0]);
+                    if (x_x < 0) {
+                        x_x = -1 * x_x;
+                    }
+                    y_y = int_rectangle[2] - Double.parseDouble(current_position.split(";")[1]);
+                    if (y_y < 0) {
+                        y_y = -1 * y_y;
+                    }
+                    id_distance.add(id + "/" + Math.sqrt(Math.pow(x_x, 2) + Math.pow(y_y, 2)));
+                }
+            }
+            System.out.println("distance: " + id_distance.size() + "count: " + figure_count);
+            for (String item : id_distance) {
+                System.out.println(item);
+            }
+
+
+            // ищем близжайшую фигуру
+            best_temp = fitnessSortBestLowCost(id_distance);
+            // записываем ее id в tabu
+            tabu.add(Integer.parseInt(best_temp.split("/")[0]));
+            id_distance.clear();
+        }
+
+        // формирование жадной хромосомы
+        chromosome = chromosome.concat("0:");
+        for (Integer item : tabu){
+            chromosome = chromosome.concat(item +":");
+        }
+        chromosome = chromosome.concat("0");
+        return chromosome;
+    }
+
+    public static boolean exist_in_tabu(int id, ArrayList<Integer> tabu){
+        for (int item : tabu){
+            if(id==item){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static String [] getInitialPopulation(int current_rp){
 
@@ -29,11 +92,27 @@ public class MasterAlgoritm {
                 init_population[i] = "0";
             }
 
-            for (int j = 0; j < current_rp; j++) {
+            init_population[0] = low_cost_route();
+
+            // Для мониторинга
+            low_cost_route_compare = init_population[0];
+            low_cost_info = compare_with_low_cost(low_cost_route_compare);
+        System.out.println("low_cost_info: "+low_cost_info);
+
+            for (int j = 1; j < current_rp; j++) {
                 template_route.add(0);
                 init_population[j] = getRandomChromosome();
             }
         return init_population;
+    }
+
+    public static String compare_with_low_cost(String low_cost_route_compare){
+        fitnessFunction(low_cost_route_compare);
+        cost = fitness_f.get(0);
+        fitness_f.clear();
+        String info = low_cost_route_compare+"/"+cost;
+
+        return info;
     }
 
     public static String getRandomChromosome(){
@@ -446,6 +525,21 @@ public class MasterAlgoritm {
             // -j оптимизация, с каждой итерацией самый большой из непередвинутых, предвигается в конец
             for (int i = 0; i < fitness_f.size()-1-j; i++) {
                 if (fitness_f.get(i) > fitness_f.get(i + 1)) {
+                    temp = fitness_f.get(i);
+                    fitness_f.set(i, fitness_f.get(i + 1));
+                    fitness_f.set(i + 1, temp);
+                }
+            }
+        }
+        return fitness_f.get(0);
+    }
+
+    public static String fitnessSortBestLowCost(ArrayList<String> fitness_f){
+        String temp;
+        for (int j=0;j<fitness_f.size();j++) {
+            // -j оптимизация, с каждой итерацией самый большой из непередвинутых, предвигается в конец
+            for (int i = 0; i < fitness_f.size()-1-j; i++) {
+                if (Double.parseDouble(fitness_f.get(i).split("/")[1]) > Double.parseDouble(fitness_f.get(i + 1).split("/")[1])) {
                     temp = fitness_f.get(i);
                     fitness_f.set(i, fitness_f.get(i + 1));
                     fitness_f.set(i + 1, temp);

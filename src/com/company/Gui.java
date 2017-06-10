@@ -135,7 +135,7 @@ import java.util.Random;
             public void actionPerformed(ActionEvent e){
 
                 if(e.getSource() == def){
-                    field_1.setText("20;20;0.7;0.05;0.95;3");
+                    field_1.setText("40;20;0.7;0.05;0.95;3");
                     /** {0, 1, 2, 2};
                         {0, 3, 3, 7};
                         {1, 4, 2, 5};

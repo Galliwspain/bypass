@@ -183,8 +183,7 @@ public class Galgorithm{
         double target_ps = Double.parseDouble(params[2]);
         double target_pm = Double.parseDouble(params[3]);
         double target_so = Double.parseDouble(params[4]);
-//        int target_kp = Integer.parseInt(params[5]);
-        int target_kp = 2;
+        int target_kp = Integer.parseInt(params[5]);
 
         all_statistics = new String [target_kp][target_tg];
 
