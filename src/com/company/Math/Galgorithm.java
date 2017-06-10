@@ -27,6 +27,7 @@ public class Galgorithm{
     public static ArrayList<ArrayList<String>> tgBestList = new ArrayList<ArrayList<String>>();
     public static ArrayList<String> kpBestList = new ArrayList<>();
     public static String [][] all_statistics;
+    public static ArrayList<String> anality = new ArrayList<>();
     public static String [][] fitness_statistics;
     public static ArrayList<Double> history_best_finder = new ArrayList<Double>();
     public static ArrayList<Double> final_best_finder = new ArrayList<Double>();
@@ -204,6 +205,7 @@ public class Galgorithm{
             current_population = MasterAlgoritm.getInitialPopulation(target_rp);
             stop_initial = System.currentTimeMillis();
             initial_total=stop_initial-start_initial;
+            anality.add(MasterAlgoritm.getBestRouteFitness(current_population));
             MasterAlgoritm.bindPopulationsFromDifferentKP(current_population, kp ,target_rp);
 
             // генерации шаг 6
@@ -215,24 +217,28 @@ public class Galgorithm{
                 current_population = MasterAlgoritm.sortElite(target_so, target_rp, current_population);
                 stop_elite = System.currentTimeMillis();
                 elite_total=stop_elite-start_elite;
+                anality.add(MasterAlgoritm.getBestRouteFitness(current_population));
 
                 //Кроссинговер
                 start_crossover = System.currentTimeMillis();
                 current_population = MasterAlgoritm.crossover(current_population.length, target_ps, current_population);
                 stop_crossover = System.currentTimeMillis();
                 crossover_total=stop_crossover-start_crossover;
+                anality.add(MasterAlgoritm.getBestRouteFitness(current_population));
 
                 // Мутации
                 start_mutation = System.currentTimeMillis();
                 current_population = MasterAlgoritm.mutation(current_population.length,target_pm, current_population);
                 stop_mutation = System.currentTimeMillis();
                 mutation_total=stop_mutation-start_mutation;
+                anality.add(MasterAlgoritm.getBestRouteFitness(current_population));
 
                 // Селекция
                 start_selection = System.currentTimeMillis();
                 current_population = MasterAlgoritm.selection(target_rp, current_population);
                 stop_selection = System.currentTimeMillis();
                 selection_total=stop_selection-start_selection;
+                anality.add(MasterAlgoritm.getBestRouteFitness(current_population));
 
                 // Получение лучшего маршрута и значения фитнес-функции из обработанной популяции
 //                tgBestList.add(MasterAlgoritm.getBestRouteFitness(current_population));
@@ -312,6 +318,14 @@ public class Galgorithm{
                 + "Время поиска лучшего маршрута в генерации: " + statistics_total + " millis\n"
                 + "Время поиска лучшего маршрута за все время: " + winner_total + " millis\n"
         );
+
+        System.out.println("############################################################################################################################################################################################################################################################################################################");
+        for (String item : anality){
+            System.out.print(item + " -> ");
+        }
+        System.out.println();
+        System.out.println("############################################################################################################################################################################################################################################################################################################");
+
 
         /** проверка заполненности общей бызы популяций */
 //        for (int i = 0; i < target_kp; i++){
