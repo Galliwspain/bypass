@@ -19,7 +19,10 @@ import java.util.Random;
         JTextField[] field = new JTextField[5];
         JButton accept = new JButton("Вычислить");
         JButton def = new JButton("5 случайных фигур");
-        JButton big_def = new JButton("25 случайных фигур");
+        JButton big_def = new JButton("25 фигур с вложенностью");
+        JButton big_def_17 = new JButton("17 случайных фигур");
+        JButton big_def_25 = new JButton("25 фигур без вложенности");
+        JButton big_def_37 = new JButton("37 случайных фигур");
         JLabel label_1;
         JLabel label_2;
         JLabel label_3;
@@ -119,6 +122,9 @@ import java.util.Random;
 
             this.add(def);
             this.add(big_def);
+            this.add(big_def_17);
+            this.add(big_def_25);
+            this.add(big_def_37);
             this.add(accept);
             this.add(label_10);
 
@@ -132,6 +138,15 @@ import java.util.Random;
 
             Handler big_def_data = new Handler();
             big_def.addActionListener(big_def_data);
+
+            Handler big_def_017 = new Handler();
+            big_def_17.addActionListener(big_def_017);
+
+            Handler big_def_025 = new Handler();
+            big_def_25.addActionListener(big_def_025);
+
+            Handler big_def_037 = new Handler();
+            big_def_37.addActionListener(big_def_037);
         }
 
         class Handler implements ActionListener{
@@ -153,18 +168,51 @@ import java.util.Random;
 
                 if(e.getSource() == big_def){
                     field_1.setText("20;20;0.7;0.05;0.95;3");
-                    /** {0, 1, 2, 2};
-                     {0, 3, 3, 7};
-                     {1, 4, 2, 5};
-                     {4, 0, 5, 2};
-                     {4, 3, 6, 4};
-                     */
+
                     field_2.setText(
                             "0,1,2,2;0,3,3,7;1,4,2,6;4,0,5,2;4,3,7,10;" +
                                     "5,4,6,9;0,8,1,10;0,11,8,18;0,12,1,14;0,15,7,17;"+
                                     "2,12,7,14;9,0,10,8;9,9,10,18;11,0,12,8;11,9,12,18;"+
                                     "13,0,15,2;13,3,15,5;13,6,15,8;13,9,15,11;13,12,15,14;"+
                                     "13,15,15,17;13,18,15,20;0,19,12,20;16,0,20,20;17,1,19,19"
+                    );
+                }
+
+                if(e.getSource() == big_def_17){
+                    field_1.setText("20;20;0.7;0.05;0.95;3");
+
+                    field_2.setText(
+                            "1,1,19,2;1,19,19,18;1,3,2,17;18,3,19,17;3,3,17,4;" +
+                                    "3,16,17,17;3,5,4,15;16,5,17,15;5,5,15,6;5,14,15,15;"+
+                                    "7,7,13,8;7,12,13,13;7,9,8,11;12,9,13,11;9,9,11,11"+
+                                    "5,7,6,13;14,7,15,13"
+                    );
+                }
+
+                if(e.getSource() == big_def_25){
+                    field_1.setText("20;20;0.7;0.05;0.95;3");
+
+                    field_2.setText(
+                            "1,1,3,3;1,4,3,6;1,7,3,9;1,10,3,12;1,13,3,15;" +
+                                    "1,16,3,18;1,19,20,20;4,1,8,6;4,7,8,12;4,13,8,18;"+
+                                    "9,1,10,8;9,9,10,16;9,17,20,18;11,1,12,8;11,9,12,16"+
+                                    "13,1,20,2;13,3,15,5;13,6,15,8;13,9,15,11;13,12,15,14;"+
+                                    "13,15,20,16;16,13,20,14;16,11,20,12;16,9,20,10;16,3,20,8"
+                    );
+                }
+
+                if(e.getSource() == big_def_37){
+                    field_1.setText("20;20;0.7;0.05;0.95;3");
+
+                    field_2.setText(
+                            "1,1,4,2;1,3,4,4;1,5,4,6;1,7,4,8;1,9,4,10;" +
+                                    "1,11,4,12;1,13,4,14;1,15,4,16;1,17,4,18;1,19,4,20;"+
+                                    "5,1,6,20;9,1,10,8;9,9,10,20;11,1,12,8;11,9,12,20;"+
+                                    "13,1,15,2;13,3,15,5;13,6,15,8;13,9,15,11;13,12,15,14;"+
+                                    "7,1,8,20;13,15,15,17;13,18,15,20;16,1,18,2;16,3,18,4;"+
+                                    "16,5,18,6;16,7,18,8;16,9,18,10;16,11,18,12;16,13,18,14;"+
+                                    "16,15,18,16;16,17,18,18;16,19,18,20;19,1,20,6;19,7,20,7;"+
+                                    "19,14,20,20"
                     );
                 }
 
