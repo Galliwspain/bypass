@@ -179,30 +179,30 @@ import java.util.Random;
                 }
 
                 if(e.getSource() == big_def_17){
-                    field_1.setText("20;20;0.7;0.05;0.95;3");
+                    field_1.setText("60;25;0.5;0.15;0.95;3");
 
                     field_2.setText(
                             "1,1,19,2;1,19,19,18;1,3,2,17;18,3,19,17;3,3,17,4;" +
                                     "3,16,17,17;3,5,4,15;16,5,17,15;5,5,15,6;5,14,15,15;"+
-                                    "7,7,13,8;7,12,13,13;7,9,8,11;12,9,13,11;9,9,11,11"+
+                                    "7,7,13,8;7,12,13,13;7,9,8,11;12,9,13,11;9,9,11,11;"+
                                     "5,7,6,13;14,7,15,13"
                     );
                 }
 
                 if(e.getSource() == big_def_25){
-                    field_1.setText("20;20;0.7;0.05;0.95;3");
+                    field_1.setText("60;25;0.5;0.15;0.95;3");
 
                     field_2.setText(
                             "1,1,3,3;1,4,3,6;1,7,3,9;1,10,3,12;1,13,3,15;" +
                                     "1,16,3,18;1,19,20,20;4,1,8,6;4,7,8,12;4,13,8,18;"+
-                                    "9,1,10,8;9,9,10,16;9,17,20,18;11,1,12,8;11,9,12,16"+
+                                    "9,1,10,8;9,9,10,16;9,17,20,18;11,1,12,8;11,9,12,16;"+
                                     "13,1,20,2;13,3,15,5;13,6,15,8;13,9,15,11;13,12,15,14;"+
                                     "13,15,20,16;16,13,20,14;16,11,20,12;16,9,20,10;16,3,20,8"
                     );
                 }
 
                 if(e.getSource() == big_def_37){
-                    field_1.setText("20;20;0.7;0.05;0.95;3");
+                    field_1.setText("60;25;0.5;0.15;0.95;3");
 
                     field_2.setText(
                             "1,1,4,2;1,3,4,4;1,5,4,6;1,7,4,8;1,9,4,10;" +
@@ -239,6 +239,9 @@ import java.util.Random;
                         accept.setVisible(false);
                         def.setVisible(false);
                         big_def.setVisible(false);
+                        big_def_17.setVisible(false);
+                        big_def_25.setVisible(false);
+                        big_def_37.setVisible(false);
                         JOptionPane.showMessageDialog(null, Galgorithm.winner_message);
                         label_10.setText(MasterAlgoritm.beastr);
 

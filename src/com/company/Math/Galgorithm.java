@@ -303,6 +303,7 @@ public class Galgorithm{
         }
 
         System.out.println("Лучшее значение целевой функции : "+winner_fitness+"  Лучший маршрут: "+winner_route);
+        System.out.println("low_cost_info: "+MasterAlgoritm.low_cost_info);
 
         System.out.println("ВРЕМЕННЫЕ ЗАТРАТЫ:\n"
             + "Общее время выполнения: " + (proccess_total+figure_initialization_total) + " millis\n"
